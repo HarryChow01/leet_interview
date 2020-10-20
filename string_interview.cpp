@@ -314,13 +314,46 @@ string Manacher(string s) {
     return s.substr((resCenter - resLen) / 2, resLen - 1);
 }
 
+char* getStr1() {
+    int a = 1;
+    printf("getStr1: &a: %p\n", &a); // 0xffffcbcc
+
+    static char str[128];
+    strcpy(str, "Hello");
+    printf("getStr1: str: %p\n", str);
+    //printf("getStr1: str: %p\n", &str); // 同上
+    printf("getStr1: str: %s\n", str);
+
+    return str;
+}
+
+char* getStr2() {
+    static char* str = (char *)malloc(128 * sizeof(char));
+    strcpy(str, "Hello");
+    printf("getStr2: str: %p\n", str);
+    printf("getStr2: str: %s\n", str);
+    printf("getStr2: &str: %p\n", &str);
+    return str;
+}
+
+void test() {
+    char* str1 = getStr1();
+    char* str2 = getStr2();
+
+    printf("str1: %p\n", str1);
+    printf("str2: %p\n", str2);
+
+    printf("str1: %s\n", str1);
+    printf("str2: %s\n", str2);
+
+}
 
 int main() {
     //testReplaceSpace();
     //testPermutex_ation();
     //cout << "shortestPalindrome: " << shortestPalindrome1("abb") << endl;
     // testReverseWords1();
-    testStrstr2();
+    //testStrstr2();
 
     //string s1 = "abbab";
     //cout << Manacher(s1) << endl;
@@ -328,6 +361,8 @@ int main() {
     //cout << Manacher(s2) << endl;
     //string s = "waabwswfd";
     //cout << Manacher(s) << endl;
+
+    test();
 
 }
 
