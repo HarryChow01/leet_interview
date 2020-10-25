@@ -18,6 +18,14 @@ struct ListNode {
     }
 };
 
+template<typename T>
+void printContainer(const T& container) {
+    for (auto& item : container) {
+        std::cout << item << " ";
+    }
+    std::cout << std::endl;
+}
+
 /*
  * 二分查找
  */
@@ -46,9 +54,7 @@ void testBisearch() {
 
 template<typename T>
 int partition(T data[], int start, int end) {
-    if (start < 0 || start >= end) {
-        return;
-    }
+    assert ((start >= 0) && (start < end));
     T pivot = data[start];
     while (start < end) {
         while ((start < end) && (data[end] >= pivot)) --end;
@@ -65,12 +71,11 @@ void quickSort1(T data[], int start, int end) {
     if (start < 0 || start >= end) {
         return;
     }
-    if (start < end) {
-        int pivot = partition(data, start, end);
-        quickSort1(data, start, pivot - 1);
-        quickSort1(data, pivot + 1, end);
-    }
+    int pivot = partition(data, start, end);
+    quickSort1(data, start, pivot - 1);
+    quickSort1(data, pivot + 1, end);
 }
+
 /*
  * 非递归快排用栈保存划分的首尾index
  * https://blog.csdn.net/Scythe666/article/details/50951938
@@ -108,39 +113,22 @@ void quickSort2(T data[], int low, int high) {
 }
 
 void testQuickSort() {
-    const size_t kSize = 1024;
-    vector<size_t> data;
-    data.reserve(kSize);
+    vector<int> data = {3,1,6,9,3,2,7,8,4,5};
 
-    printf("RAND_MAX:%d\n", RAND_MAX);
-    srand(time(nullptr));
-    for(int i = 0; i < kSize; i++) {
-        data[i] = rand();
-    }
     printf("Before sort:");
-    for(int i = 0; i < 20; i++) {
-        printf("%d ", data[i]);
-    }
-    printf("\n");
-    time_t start = time(nullptr);
-    quickSort1(data.data(), 0, kSize - 1);
-    time_t end = time(nullptr);
+    printContainer(data);
 
-    time_t duration = end - start;  //end - start，单位是秒整数
+    //quickSort1(data.data(), 0, data.size() - 1);
+    quickSort2(data.data(), 0, data.size() - 1);
 
     printf("after sort:");
-    for(int i = 0; i < 20; i++) {
-        printf("%d ", data[i]);
-    }
-    printf("\n");
-
-    printf("quickSort %d integers,spent time %lf seconds\n", kSize, duration);
+    printContainer(data);
 }
 
 template<typename T>
 void heapAdjust(T data[], int s, int m) {
     T record = data[s];
-    for (int j = 2 * s; j <= m; j *= 2) {
+    for (int j = 2 * s + 1; j <= m; j = 2 * s + 1) {
         if ((j < m) && (data[j] < data[j + 1])) ++j;
         if (record >= data[j]) {
             break;
@@ -152,7 +140,7 @@ void heapAdjust(T data[], int s, int m) {
 }
 template<typename T>
 void heapSort(T data[], int length) {
-    if (length < 1) return;
+    if (length <= 1) return;
     for (int i = length / 2; i >= 0; --i) {
         heapAdjust(data, i, length - 1);
     }
@@ -163,29 +151,14 @@ void heapSort(T data[], int length) {
 }
 
 void testHeapSort() {
-    const size_t kDataSize = 16;
-    vector<size_t> data(kDataSize, 0);
-    srand((uint32_t)time(nullptr));
+    vector<int> data = {3,1,6,9,3,2,7,8,4,5};
     std::cout << "before sort: ";
-    for (auto& item : data) {
-        item = size_t(rand() % 100);
-        cout << item << " ";
-    }
-    cout << endl;
+    printContainer(data);
 
-    std::cout << "\nsorting........\n\n";
-
-    time_t start = time(nullptr);
     heapSort(data.data(), data.size());
-    time_t end = time(nullptr);
-    double duration = end - start;  //end - start，单位是秒整数
 
     std::cout << "after sort: ";
-    for (auto& item : data) {
-        cout << item << " ";
-    }
-    cout << endl;
-    std::cout << "heap sort " << kDataSize << " integers,spent time " << duration << " seconds" << std::endl;
+    printContainer(data);
 }
 
 
@@ -438,8 +411,8 @@ ListNode *createListSort() {
 
 int main() {
     //testBisearch();
-    testQuickSort();
-    //testHeapSort1();
+    //testQuickSort();
+    testHeapSort();
     //testMergeSort();
 
     return 0;
