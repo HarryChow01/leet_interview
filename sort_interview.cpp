@@ -29,7 +29,7 @@ void printContainer(const T& container) {
 /*
  * 二分查找
  */
-int biSearch(int data[], const int len, const int value) {
+int biSearch(const int data[], const int len, const int value) {
     int low = 0;
     int high = len - 1;
     while(low < high) {

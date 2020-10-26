@@ -13,16 +13,15 @@ template <typename T>
 class BlockingQueue {
 public:
     explicit BlockingQueue(size_t capacity = kCapacitySize) : capacity_(capacity) {}
-    void pop_front();
-    void push_back(const T& item);
-    T& front();
+    void put(const T& item);
+    T take();
 
-    size_t size() {
+    size_t size() const {
         std::unique_lock<std::mutex> lock(mutex_);
         return data_.size();
     }
 
-    bool empty() {
+    bool empty() const {
         std::unique_lock<std::mutex> lock(mutex_);
         return data_.empty();
     }
@@ -31,7 +30,7 @@ private:
     static const size_t kCapacitySize = 1024;
     size_t capacity_;
     std::deque<T> data_;
-    std::mutex mutex_;
+    mutable std::mutex mutex_;
     std::condition_variable cvNotFull_;
     std::condition_variable cvNotEmpty_;
 };

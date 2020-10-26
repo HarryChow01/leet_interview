@@ -6,16 +6,16 @@ using namespace std;
 
 int main() {
 
-    LRUCache<int, int> lruCache(4);
-    lruCache.put(1, 1);
-    lruCache.put(2, 2);
-    lruCache.put(3, 3);
-    lruCache.put(4, 4);
-    lruCache.put(5, 5);
+    LRUCache<std::string, int> lruCache(4);
+    lruCache.put("aa", 1);
+    lruCache.put("bb", 2);
+    lruCache.put("cc", 3);
+    lruCache.put("dd", 4);
+    lruCache.put("ee", 5);
 
     int value = 0;
-    lruCache.get(3, value);
-    cout << "get key 3: " << "value: " << value << endl;
+    lruCache.get("dd", value);
+    cout << "get key dd: " << "value: " << value << endl;
     lruCache.printDataList();
 }
 

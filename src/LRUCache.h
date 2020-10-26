@@ -10,16 +10,17 @@
 #include <utility>
 #include <iostream>
 
-using namespace std;
+using std::cout;
+using std::endl;
 
 template <typename Key, typename Value>
 class LRUCache {
 public:
-    using Iterator = typename list<pair<Key, Value>>::iterator;
+    using Iterator = typename std::list<std::pair<Key, Value>>::iterator;
     static const uint32_t kCapacity = 1024;
     explicit LRUCache(uint32_t capacity = kCapacity) : capacity_(capacity) {}
 
-    bool get(const Key& key, Value &value) {
+    bool get(const Key& key, Value& value) {
         if (entrys_.find(key) != entrys_.end()){
             dataList_.splice(dataList_.begin(), dataList_, entrys_[key]);
             value = entrys_[key]->second;
@@ -51,9 +52,8 @@ public:
     }
 private:
     uint32_t capacity_ = kCapacity;
-    list<pair<Key, Value>> dataList_;
-    unordered_map<int, Iterator> entrys_;
-    //typename unordered_map<int, list<pair<typename Key, typename Value>::iterator> entrys_;
+    std::list<std::pair<Key, Value>> dataList_;
+    std::unordered_map<Key, Iterator> entrys_;
 };
 
 
