@@ -11,48 +11,75 @@
 #include <algorithm>
 #include <cassert>
 
-
 using namespace std;
 
 // 替换空格为%20
-class Solution1 {
-public:
-    static void replaceSpace(char *str) {
-        if (!str){
-            return;
-        }
+void replaceSpace1(char* str) {
+    if (!str) {
+        return;
+    }
 
-        int original_length = 0;			//原始长度
-        int number_blank = 0;				//空格数
-        while (str[original_length++] != '\0') {				//遍历字符串
-            if(str[original_length] == ' '){
-                ++number_blank;				//遇到空格+1
-            }
-        }
-        /*new_length为把空格替换成'%20'之后的长度*/
-        int new_length = original_length + 2 * number_blank;
-
-        int index_original = original_length;	//原始字符串末尾索引值
-        int index_new = new_length;				//计算长度后的字符串末尾索引值
-
-        /*index_original指针开始向前移动，如果遇到空格，替换成'%20'，否则进行复制操作*/
-        while (index_original >= 0) {
-            if (str[index_original] == ' ') {
-                str[index_new--] = '0';
-                str[index_new--] = '2';
-                str[index_new--] = '%';
-            } else {
-                str[index_new--] = str[index_original];
-            }
-            --index_original;
+    int original_length = 0;            //原始长度
+    int number_blank = 0;                //空格数
+    while (str[original_length++] != '\0') {                //遍历字符串
+        if (str[original_length] == ' ') {
+            ++number_blank;                //遇到空格+1
         }
     }
-};
+    /*new_length为把空格替换成'%20'之后的长度*/
+    int new_length = original_length + 2 * number_blank;
+
+    int index_original = original_length;    //原始字符串末尾索引值
+    int index_new = new_length;                //计算长度后的字符串末尾索引值
+
+    /*index_original指针开始向前移动，如果遇到空格，替换成'%20'，否则进行复制操作*/
+    while (index_original >= 0) {
+        if (str[index_original] == ' ') {
+            str[index_new--] = '0';
+            str[index_new--] = '2';
+            str[index_new--] = '%';
+        } else {
+            str[index_new--] = str[index_original];
+        }
+        --index_original;
+    }
+}
+
+char* delSubStr(char* str, const char* subStr) {
+    if (!str || !subStr) {
+        return nullptr;
+    }
+    size_t prev = 0;
+    size_t pos = 0;
+    char* start = str;
+    while (*start) {
+        while (start[pos] && subStr[pos] && (start[pos] == subStr[pos])) {
+            ++pos;
+        }
+        if (!subStr[pos]) {
+            start += pos;
+            pos = 0;
+        } else {
+            str[prev++] = *start++;
+            pos = 0;
+        }
+    }
+    str[prev++] = '\0';
+
+    return str;
+}
 
 void testReplaceSpace() {
     char str[256] = "a b c";
-    Solution1::replaceSpace(str);
+
+    replaceSpace1(str);
     cout << "str: " << str << endl;
+
+    char str2[64] = "cdabcdeab";
+    char subStr[] = "abc";
+    char* strEnd = delSubStr(str2, subStr);
+    cout << "str2: " << strEnd << std::endl;
+
 }
 
 // 求子串
@@ -61,7 +88,7 @@ const char* strstr2(const char* str, const char* substr) {
         return nullptr;
     }
     int i = 0;
-    while(str[i] != '\0') {
+    while (str[i] != '\0') {
         int k = i;
         int j = 0;
         while (str[k] && substr[j] && (str[k] == substr[j])) {
@@ -79,6 +106,7 @@ const char* strstr2(const char* str, const char* substr) {
     }
     return nullptr;
 }
+
 void testStrstr2() {
     //char str[] = "abcabcdabcd";
     //char str[] = "abcabcabcd";
@@ -102,9 +130,9 @@ public:
                 cout << data[i] << ' ';
             cout << endl;
         } else {
-            for (size_t i = k; i <= last ; i++) {
+            for (size_t i = k; i <= last; i++) {
                 std::swap(data[k], data[i]);   //交换
-                permutex_ation1(data, k+1, last);
+                permutex_ation1(data, k + 1, last);
                 std::swap(data[k], data[i]);
             }
         }
@@ -114,10 +142,10 @@ public:
 
         if (k == last) {
             for (size_t i = 0; i <= last; ++i)
-                cout<<data[i]<<' ';
-            cout<<endl;
+                cout << data[i] << ' ';
+            cout << endl;
         } else {
-            for (size_t i = k; i <= last ; ++i) {
+            for (size_t i = k; i <= last; ++i) {
                 size_t tmp = data[i];
                 for (size_t j = i; j > k; --j) {
                     data[j] = data[j - 1];
@@ -134,11 +162,10 @@ public:
     }
 
 
-
-    static void permutex_ation3(string str, vector<string>& result) {
+    static void permutex_ation3(string str, vector<string> &result) {
         //判断输入
-        if(str.length() == 0){
-            return ;
+        if (str.length() == 0) {
+            return;
         }
         permutex_ationCore(str, 0, result);
         //对结果进行排序
@@ -146,15 +173,15 @@ public:
     }
 
 private:
-    static void permutex_ationCore(string str, int begin, vector<string>& result){
+    static void permutex_ationCore(string str, int begin, vector<string> &result) {
         //递归结束的条件：第一位和最后一位交换完成
-        if(begin == str.length()){
+        if (begin == str.length()) {
             result.push_back(str);
             return;
         }
-        for(int i = begin; i < str.length(); ++i){
+        for (int i = begin; i < str.length(); ++i) {
             //如果字符串相同，则不交换
-            if(i != begin && str[i] == str[begin]){
+            if (i != begin && str[i] == str[begin]) {
                 continue;
             }
             //位置交换
@@ -174,8 +201,8 @@ void testPermutex_ation() {
     Solution2::permutex_ation1(data, 0, kSize - 1);
     cout << "\n\nnow data:\n";
     for (size_t i = 0; i < kSize; ++i)
-        cout<<data[i]<<' ';
-    cout<<endl;
+        cout << data[i] << ' ';
+    cout << endl;
 }
 
 
@@ -194,6 +221,7 @@ void reverse(string &s, size_t begin, size_t end) {
         std::swap(s[begin++], s[--end]);
     }
 }
+
 void reverseWords1(string &s) {
     size_t idx = 0, n = s.size();
     reverse(s, 0, s.size());
@@ -207,6 +235,7 @@ void reverseWords1(string &s) {
     }
     s.resize(idx);
 }
+
 void testReverseWords1() {
     //string s = "the sky is blue";
     string s = "   the   sky is   blue  ";
@@ -252,7 +281,7 @@ string longestPalindrome1(string s) {
 
 
 void leftRotateString(string &str, const size_t kSize) {
-    if(str.empty() || kSize == 0){
+    if (str.empty() || kSize == 0) {
         return;
     }
     const size_t leftSize = kSize % str.size();
@@ -261,6 +290,7 @@ void leftRotateString(string &str, const size_t kSize) {
     std::reverse(str.begin() + leftSize, str.end());
     std::reverse(str.begin(), str.end());
 }
+
 void rightRotateString(string &str, const size_t kSize) {
     if (str.empty() || kSize == 0) {
         return;
@@ -271,6 +301,7 @@ void rightRotateString(string &str, const size_t kSize) {
     std::reverse(str.begin() + leftSize, str.end());
     std::reverse(str.begin(), str.end());
 }
+
 void testRotateString() {
     string str("abcdefg");
     rightRotateString(str, 2);
@@ -328,7 +359,7 @@ char* getStr1() {
 }
 
 char* getStr2() {
-    static char* str = (char *)malloc(128 * sizeof(char));
+    static char* str = (char*) malloc(128 * sizeof(char));
     strcpy(str, "Hello");
     printf("getStr2: str: %p\n", str);
     printf("getStr2: str: %s\n", str);
@@ -349,7 +380,7 @@ void test() {
 }
 
 int main() {
-    //testReplaceSpace();
+    testReplaceSpace();
     //testPermutex_ation();
     //cout << "shortestPalindrome: " << shortestPalindrome1("abb") << endl;
     // testReverseWords1();
@@ -362,7 +393,7 @@ int main() {
     //string s = "waabwswfd";
     //cout << Manacher(s) << endl;
 
-    test();
+    //test();
 
 }
 

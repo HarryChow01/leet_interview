@@ -9,11 +9,13 @@
 #include <condition_variable>
 #include <deque>
 
-template <typename T>
+template<typename T>
 class BlockingQueue {
 public:
     explicit BlockingQueue(size_t capacity = kCapacitySize) : capacity_(capacity) {}
-    void put(const T& item);
+
+    void put(const T &item);
+
     T take();
 
     size_t size() const {
@@ -34,7 +36,6 @@ private:
     std::condition_variable cvNotFull_;
     std::condition_variable cvNotEmpty_;
 };
-
 
 
 #endif //LEET_INTERVIEW_BLOCKINGQUEUE_H

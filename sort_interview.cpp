@@ -12,15 +12,16 @@ using namespace std;
 
 struct ListNode {
     int val;
-    struct ListNode *next;
+    struct ListNode* next;
+
     explicit ListNode(int x = 0) :
             val(x), next(nullptr) {
     }
 };
 
 template<typename T>
-void printContainer(const T& container) {
-    for (auto& item : container) {
+void printContainer(const T &container) {
+    for (auto &item : container) {
         std::cout << item << " ";
     }
     std::cout << std::endl;
@@ -29,12 +30,15 @@ void printContainer(const T& container) {
 /*
  * 二分查找
  */
-int biSearch(const int data[], const int len, const int value) {
-    int low = 0;
-    int high = len - 1;
-    while(low < high) {
-        int mid = (low + high)/2;
-        if(value == data[mid]) {
+int biSearch(const int data[], int start, int end, const int value) {
+    if (start < 0 || start > end) {
+        return -1;
+    }
+    int low = start;
+    int high = end;
+    while (low <= high) {
+        int mid = (low + high) / 2;
+        if (value == data[mid]) {
             return mid;
         } else if (value < data[mid]) {
             high = mid - 1;
@@ -42,12 +46,12 @@ int biSearch(const int data[], const int len, const int value) {
             low = mid + 1;
         }
     }
-    return -1;
+    return -1;  //没找到
 }
 
 void testBisearch() {
-    int data[10] = {1, 2 ,3, 4, 5, 6, 7, 8, 9, 10};
-    int pos = biSearch(data, 10, 2);
+    int data[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    int pos = biSearch(data, 0, 9, 9);
     cout << "pos = " << pos << endl;
 }
 
@@ -80,7 +84,7 @@ void quickSort1(T data[], int start, int end) {
  * 非递归快排用栈保存划分的首尾index
  * https://blog.csdn.net/Scythe666/article/details/50951938
  */
-template <typename T>
+template<typename T>
 void quickSort2(T data[], int low, int high) {
     std::stack<int> stack;
     if (low < 0 || low >= high) {
@@ -113,7 +117,7 @@ void quickSort2(T data[], int low, int high) {
 }
 
 void testQuickSort() {
-    vector<int> data = {3,1,6,9,3,2,7,8,4,5};
+    vector<int> data = {3, 1, 6, 9, 3, 2, 7, 8, 4, 5};
 
     printf("Before sort:");
     printContainer(data);
@@ -138,24 +142,26 @@ void heapAdjust(T data[], int s, int m) {
     }
     data[s] = record;
 }
+
 template<typename T>
-void heapSort(T data[], int length) {
+void heapSort(std::vector<T> data) {
+    int length = data.size();
     if (length <= 1) return;
     for (int i = length / 2; i >= 0; --i) {
-        heapAdjust(data, i, length - 1);
+        heapAdjust(data.data(), i, length - 1);
     }
     for (int i = length - 1; i > 0; --i) {
         std::swap(data[0], data[i]);
-        heapAdjust(data, 0, i - 1);
+        heapAdjust(data.data(), 0, i - 1);
     }
 }
 
 void testHeapSort() {
-    vector<int> data = {3,1,6,9,3,2,7,8,4,5};
+    vector<int> data = {3, 1, 6, 9, 3, 2, 7, 8, 4, 5};
     std::cout << "before sort: ";
     printContainer(data);
 
-    heapSort(data.data(), data.size());
+    heapSort(data);
 
     std::cout << "after sort: ";
     printContainer(data);
@@ -174,6 +180,7 @@ void merge(T source[], T dest[], int i, int m, int n) {
     while (i <= m) dest[k++] = source[i++];
     while (j <= n) dest[k++] = source[j++];
 }
+
 template<typename T>
 void mergeSort(T data[], int start, int end) {
     if (start >= end) return;
@@ -206,9 +213,9 @@ void bucketSort(uint32_t data[], int length, uint32_t startValue, uint32_t endVa
 
 // 无序数组的中位数
 // 快排的思想：注意数据量是奇数还是偶数的情况
-int median1(vector<int>& data) {
+int median1(vector<int> &data) {
     if (data.empty()) return INT32_MIN;
-    int largeIndex = int (data.size() / 2);
+    int largeIndex = int(data.size() / 2);
 
     int left = 0;
     int right = int(data.size()) - 1;
@@ -237,7 +244,7 @@ int median1(vector<int>& data) {
 }
 
 // 最大堆
-int median2(vector<int>& data) {
+int median2(vector<int> &data) {
     if (data.empty()) return INT32_MIN;
     const int kPos = int(data.size()) / 2;
 
@@ -265,24 +272,17 @@ int median2(vector<int>& data) {
 }
 
 
-
-
-
-
-
-
-
 /*
  * 分治法：归并排序
  */
-template <typename T>
+template<typename T>
 void merge(T data[], T leftData[], size_t leftCount, T rightData[], size_t rightCount) {
     int i = 0;
     int j = 0;
-    int k =0;
+    int k = 0;
 
     while (i < leftCount && j < rightCount) {
-        if (leftData[i]  < rightData[j])
+        if (leftData[i] < rightData[j])
             data[k++] = leftData[i++];
         else
             data[k++] = rightData[j++];
@@ -291,10 +291,10 @@ void merge(T data[], T leftData[], size_t leftCount, T rightData[], size_t right
     while (j < rightCount) data[k++] = rightData[j++];
 }
 
-template <typename T>
+template<typename T>
 void mergeSort(T data[], size_t len) {
     if (len < 2) return;
-    size_t mid = len/2;
+    size_t mid = len / 2;
 
     vector<T> leftData(data, data + mid);
     vector<T> rightData(data + mid, data + len);
@@ -304,22 +304,22 @@ void mergeSort(T data[], size_t len) {
 
     mergeSort(leftData.data(), mid);
     mergeSort(rightData.data(), len - mid);
-    merge(data, leftData.data(), mid, rightData.data(), len-mid);
+    merge(data, leftData.data(), mid, rightData.data(), len - mid);
 }
 
 void testMergeSort() {
-    vector<size_t> data = {6,2,3,1,9,10,15,13,12,17};
+    vector<size_t> data = {6, 2, 3, 1, 9, 10, 15, 13, 12, 17};
     mergeSort(data.data(), data.size());
 
     cout << "after sort:\n";
-    for (auto& item : data)
+    for (auto &item : data)
         cout << item << " ";
     cout << endl;
 }
 
-ListNode *mergeTwoLists(ListNode *l1, ListNode *l2) {
-    ListNode *head = new ListNode(-1);
-    ListNode *cur = head;
+ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
+    ListNode* head = new ListNode(-1);
+    ListNode* cur = head;
     while (l1 && l2) {
         if (l1->val < l2->val) {
             cur->next = l1;
@@ -336,13 +336,13 @@ ListNode *mergeTwoLists(ListNode *l1, ListNode *l2) {
 }
 
 // list sort quick Time: n*log(n)-n^2  storage: log(n)-n
-ListNode *listPartition(ListNode *head, ListNode *tail) {
+ListNode* listPartition(ListNode* head, ListNode* tail) {
     if (!head) {
         return nullptr;
     }
     int pivot = head->val;
-    ListNode *p = head;
-    ListNode *q = head->next;
+    ListNode* p = head;
+    ListNode* q = head->next;
     while (q != tail) {
         if (q->val < pivot) {
             p = p->next;
@@ -356,23 +356,23 @@ ListNode *listPartition(ListNode *head, ListNode *tail) {
     return p;
 }
 
-void listQuickSort(ListNode *head, ListNode *tail) {
+void listQuickSort(ListNode* head, ListNode* tail) {
     if (!head) {
         return;
     }
     if (head != tail) {
-        ListNode *p = listPartition(head, tail);
+        ListNode* p = listPartition(head, tail);
         listQuickSort(head, p);
         listQuickSort(p->next, tail);
     }
 }
 
-ListNode *listMergeSort(ListNode *head) {
+ListNode* listMergeSort(ListNode* head) {
     if (!head || !head->next)
         return head;
     /* 找到链表中间的节点，prev代表中间节点的前一个节点 */
-    ListNode * slow = head;
-    ListNode * fast = head->next;
+    ListNode* slow = head;
+    ListNode* fast = head->next;
     while (fast && fast->next) {
         slow = slow->next;
         fast = fast->next->next;
@@ -382,17 +382,16 @@ ListNode *listMergeSort(ListNode *head) {
     slow = slow->next;
     fast->next = nullptr;
     /* 对左右两部分分别进行切分和排序　*/
-    ListNode * lhs = listMergeSort(head);
-    ListNode * rhs = listMergeSort(slow);
+    ListNode* lhs = listMergeSort(head);
+    ListNode* rhs = listMergeSort(slow);
     /* 返回的lhs和rhs是已经排好序的链表，接下来将这两个有序链表合并成一个 */
     return mergeTwoLists(lhs, rhs);
 }
 
 
-
-ListNode *createListSort() {
-    auto *head = new ListNode(4);
-    ListNode *help = head;
+ListNode* createListSort() {
+    auto* head = new ListNode(4);
+    ListNode* help = head;
     help->next = new ListNode(1);
     help = help->next;
     help->next = new ListNode(6);
@@ -410,7 +409,7 @@ ListNode *createListSort() {
 }
 
 int main() {
-    //testBisearch();
+    testBisearch();
     //testQuickSort();
     testHeapSort();
     //testMergeSort();

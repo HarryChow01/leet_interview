@@ -14,7 +14,8 @@ using namespace std;
 
 struct ListNode {
     int val;
-    ListNode *next;
+    ListNode* next;
+
     ListNode(int x) : val(x), next(NULL) {}
 };
 
@@ -24,10 +25,9 @@ struct Interval {
 };
 
 
-
 template<typename T>
-inline ostream& operator<<(ostream& out, vector<T>& data) {
-    for (auto& item : data) {
+inline ostream &operator<<(ostream &out, vector<T> &data) {
+    for (auto &item : data) {
         out << " " << item;
     }
     //out << endl;
@@ -35,8 +35,8 @@ inline ostream& operator<<(ostream& out, vector<T>& data) {
 }
 
 template<typename T>
-inline ostream& operator<<(ostream& out, list<T>& data) {
-    for (auto& item : data) {
+inline ostream &operator<<(ostream &out, list<T> &data) {
+    for (auto &item : data) {
         out << " " << item;
     }
     //out << endl;
@@ -44,9 +44,9 @@ inline ostream& operator<<(ostream& out, list<T>& data) {
 }
 
 template<typename T>
-inline ostream& operator<<(ostream& out, vector<vector<T>>& data) {
-    for (auto& row : data) {
-        for (auto& item : row) {
+inline ostream &operator<<(ostream &out, vector<vector<T>> &data) {
+    for (auto &row : data) {
+        for (auto &item : row) {
             out << " " << item;
         }
         out << endl;
@@ -61,47 +61,50 @@ ListNode* createList(const size_t len) {
 
     ListNode* ret = new ListNode(1);
     q = ret;
-    for(int i = 1; i < len; i++) {
+    for (int i = 1; i < len; i++) {
         p = new ListNode(1 + i);
         q->next = p;
         q = p;
     }
     return ret;
 }
-ListNode* createList2(std::list<int>& datas) {
+
+ListNode* createList2(std::list<int> &datas) {
     auto* dummy = new ListNode(-1);
     ListNode* p = dummy;
-    for(auto& item : datas) {
+    for (auto &item : datas) {
         p->next = new ListNode(item);
         p = p->next;
     }
     return dummy->next;
 }
+
 void printList(ListNode* head) {
     if (!head) {
         return;
     }
     ListNode* p = head;
     cout << "List:";
-    while(p) {
+    while (p) {
         cout << " " << p->val;
         p = p->next;
     }
     cout << endl;
 }
+
 void deleteList(ListNode* head) {
     ListNode* p = head;
-    while(p) {
+    while (p) {
         ListNode* q = p;
         p = p->next;
-        delete(q);
+        delete (q);
     }
 }
 
-ListNode *reverseOneGroup(ListNode *pre, ListNode *next) {
-    ListNode *last = pre->next;
-    ListNode *cur = last->next;
-    while(cur != next) {
+ListNode* reverseOneGroup(ListNode* pre, ListNode* next) {
+    ListNode* last = pre->next;
+    ListNode* cur = last->next;
+    while (cur != next) {
         last->next = cur->next;
         cur->next = pre->next;
         pre->next = cur;
@@ -109,10 +112,11 @@ ListNode *reverseOneGroup(ListNode *pre, ListNode *next) {
     }
     return last;
 }
-ListNode *reverseKGroup(ListNode *head, int k) {
+
+ListNode* reverseKGroup(ListNode* head, int k) {
     if (!head || k == 1) return head;
-    ListNode *dummy = new ListNode(-1);
-    ListNode *pre = dummy, *cur = head;
+    ListNode* dummy = new ListNode(-1);
+    ListNode* pre = dummy, * cur = head;
     dummy->next = head;
     int i = 0;
     while (cur) {
@@ -126,6 +130,7 @@ ListNode *reverseKGroup(ListNode *head, int k) {
     }
     return dummy->next;
 }
+
 void testReverseKGroup() {
     auto head = createList(8);
     printList(head);
@@ -133,7 +138,7 @@ void testReverseKGroup() {
     printList(head);
 }
 
-int removeDuplicates(vector<int>& nums) {
+int removeDuplicates(vector<int> &nums) {
     if (nums.empty()) return 0;
     int pre = 0, cur = 0, n = nums.size();
     while (cur < n) {
@@ -143,7 +148,7 @@ int removeDuplicates(vector<int>& nums) {
     return pre + 1;
 }
 
-int removeElement(vector<int>& nums, int val) {
+int removeElement(vector<int> &nums, int val) {
     int res = 0;
     for (int i = 0; i < nums.size(); ++i) {
         if (nums[i] != val) nums[res++] = nums[i];
@@ -166,7 +171,7 @@ int strStr(string haystack, string needle) {
 }
 
 int divide(int dividend, int divisor) {
-    long long m = abs((long long)dividend), n = abs((long long)divisor), res = 0;
+    long long m = abs((long long) dividend), n = abs((long long) divisor), res = 0;
     if (m < n) return 0;
     while (m >= n) {
         long long t = n, p = 1;
@@ -181,13 +186,13 @@ int divide(int dividend, int divisor) {
     return res > INT32_MAX ? INT32_MAX : res;
 }
 
-vector<int> findSubstring(string s, vector<string>& words) {
+vector<int> findSubstring(string s, vector<string> &words) {
     vector<int> res;
     if (s.empty() || words.empty()) return res;
     int n = words.size(), m = words[0].size();
     unordered_map<string, int> m1;
     for (auto &a : words) ++m1[a];
-    for (int i = 0; i <= (int)s.size() - n * m; ++i) {
+    for (int i = 0; i <= (int) s.size() - n * m; ++i) {
         unordered_map<string, int> m2;
         int j = 0;
         for (j = 0; j < n; ++j) {
@@ -232,7 +237,7 @@ int longestValidParentheses(string s) {
     return res;
 }
 
-int search(vector<int>& nums, int target) {
+int search(vector<int> &nums, int target) {
     int left = 0, right = nums.size() - 1;
     while (left <= right) {
         int mid = left + (right - left) / 2;
@@ -248,14 +253,15 @@ int search(vector<int>& nums, int target) {
     return -1;
 }
 
-int biSearch(vector<int>& nums, int left, int right, int target) {
+int biSearch(vector<int> &nums, int left, int right, int target) {
     if (left > right) return -1;
     int mid = left + (right - left) / 2;
     if (nums[mid] == target) return mid;
     else if (nums[mid] < target) return biSearch(nums, mid + 1, right, target);
     else return biSearch(nums, left, mid - 1, target);
 }
-vector<int> biSearch(vector<int>& nums, int target) {
+
+vector<int> biSearch(vector<int> &nums, int target) {
     int idx = biSearch(nums, 0, nums.size() - 1, target);
     if (idx == -1) return {-1, -1};
     int left = idx, right = idx;
@@ -264,7 +270,7 @@ vector<int> biSearch(vector<int>& nums, int target) {
     return {left, right};
 }
 
-int searchInsert(vector<int>& nums, int target) {
+int searchInsert(vector<int> &nums, int target) {
     for (int i = 0; i < nums.size(); ++i) {
         if (nums[i] >= target) return i;
     }
@@ -305,13 +311,14 @@ bool isValid(vector<vector<char> > &board, int i, int j) {
     }
     return true;
 }
+
 bool solveSudokuDFS(vector<vector<char> > &board, int i, int j) {
     if (i == 9) return true;
     if (j >= 9) return solveSudokuDFS(board, i + 1, 0);
     if (board[i][j] == '.') {
         for (int k = 1; k <= 9; ++k) {
-            board[i][j] = (char)(k + '0');
-            if (isValid(board, i , j)) {
+            board[i][j] = (char) (k + '0');
+            if (isValid(board, i, j)) {
                 if (solveSudokuDFS(board, i, j + 1)) return true;
             }
             board[i][j] = '.';
@@ -321,6 +328,7 @@ bool solveSudokuDFS(vector<vector<char> > &board, int i, int j) {
     }
     return false;
 }
+
 void solveSudoku(vector<vector<char> > &board) {
     if (board.empty() || board.size() != 9 || board[0].size() != 9) return;
     solveSudokuDFS(board, 0, 0);
@@ -346,13 +354,17 @@ string countAndSay(int n) {
 
 void combinationSumDFS(vector<int> &candidates, int target, int start, vector<int> out, vector<vector<int>> &res) {
     if (target < 0) return;
-    else if (target == 0) {res.push_back(out); return;}
+    else if (target == 0) {
+        res.push_back(out);
+        return;
+    }
     for (int i = start; i < candidates.size(); ++i) {
         out.push_back(candidates[i]);
         combinationSumDFS(candidates, target - candidates[i], i, out, res);
         out.pop_back();
     }
 }
+
 vector<vector<int>> combinationSum(vector<int> &candidates, int target) {
     vector<vector<int>> res;
     combinationSumDFS(candidates, target, 0, {}, res);
@@ -371,6 +383,7 @@ void combinationSum2DFS(vector<int> &num, int target, int start, vector<int> &ou
         }
     }
 }
+
 vector<vector<int> > combinationSum2(vector<int> &num, int target) {
     vector<vector<int> > res;
     vector<int> out;
@@ -379,7 +392,7 @@ vector<vector<int> > combinationSum2(vector<int> &num, int target) {
     return res;
 }
 
-int firstMissingPositive(vector<int>& nums) {
+int firstMissingPositive(vector<int> &nums) {
     int n = nums.size();
     for (int i = 0; i < n; ++i) {
         while (nums[i] > 0 && nums[i] <= n && nums[nums[i] - 1] != nums[i]) {
@@ -392,7 +405,7 @@ int firstMissingPositive(vector<int>& nums) {
     return n + 1;
 }
 
-int trap1(vector<int>& height) {
+int trap1(vector<int> &height) {
     int res = 0, mx = 0, n = height.size();
     vector<int> dp(n, 0);
     for (int i = 0; i < n; ++i) {
@@ -430,8 +443,8 @@ string multiply(string num1, string num2) {
     return res;
 }
 
-bool isWildcardMatch(char *s, char *p) {
-    char *scur = s, *pcur = p, *sstar = nullptr, *pstar = nullptr;
+bool isWildcardMatch(char* s, char* p) {
+    char* scur = s, * pcur = p, * sstar = nullptr, * pstar = nullptr;
     while (*scur) {
         if (*scur == *pcur || *pcur == '?') {
             ++scur;
@@ -448,7 +461,7 @@ bool isWildcardMatch(char *s, char *p) {
     return !*pcur;
 }
 
-bool canJump(vector<int>& nums) {
+bool canJump(vector<int> &nums) {
     vector<int> dp(nums.size(), 0);
     for (int i = 1; i < nums.size(); ++i) {
         dp[i] = max(dp[i - 1], nums[i - 1]) - 1;
@@ -457,7 +470,7 @@ bool canJump(vector<int>& nums) {
     return true;
 }
 
-int canJump2(vector<int>& nums) {
+int canJump2(vector<int> &nums) {
     int res = 0, n = nums.size(), i = 0, cur = 0;
     while (cur < n - 1) {
         ++res;
@@ -478,6 +491,7 @@ void permutex_eDFS(vector<int> &num, int start, vector<vector<int> > &res) {
         swap(num[start], num[i]);
     }
 }
+
 vector<vector<int> > permutex_e1(vector<int> &num) {
     vector<vector<int> > res;
     permutex_eDFS(num, 0, res);
@@ -485,7 +499,8 @@ vector<vector<int> > permutex_e1(vector<int> &num) {
 }
 
 // 非重复；
-void permutex_eUniqueDFS(vector<int> &num, int level, vector<int> &visited, vector<int> &out, vector<vector<int> > &res) {
+void
+permutex_eUniqueDFS(vector<int> &num, int level, vector<int> &visited, vector<int> &out, vector<vector<int> > &res) {
     if (level >= num.size()) res.push_back(out);
     else {
         for (int i = 0; i < num.size(); ++i) {
@@ -500,6 +515,7 @@ void permutex_eUniqueDFS(vector<int> &num, int level, vector<int> &visited, vect
         }
     }
 }
+
 vector<vector<int> > permutex_eUnique1(vector<int> &num) {
     vector<vector<int> > res;
     vector<int> out;
@@ -519,10 +535,11 @@ void permutex_e2(vector<int> &nums, int start, set<vector<int>> &res) {
         swap(nums[i], nums[start]);
     }
 }
-vector<vector<int>> permutex_eUnique2(vector<int>& nums) {
+
+vector<vector<int>> permutex_eUnique2(vector<int> &nums) {
     set<vector<int>> res;
     permutex_e2(nums, 0, res);
-    return vector<vector<int>> (res.begin(), res.end());
+    return vector<vector<int>>(res.begin(), res.end());
 }
 
 void rotate(vector<vector<int> > &matrix) {
@@ -535,7 +552,7 @@ void rotate(vector<vector<int> > &matrix) {
     }
 }
 
-vector<vector<string>> groupAnagrams(vector<string>& strs) {
+vector<vector<string>> groupAnagrams(vector<string> &strs) {
     vector<vector<string>> res;
     unordered_map<string, vector<string>> m;
     for (string str : strs) {
@@ -555,6 +572,7 @@ double power1(double x, int n) {
     if (n % 2 == 0) return half * half;
     return x * half * half;
 }
+
 double myPow(double x, int n) {
     if (n < 0) return 1 / power1(x, -n);
     return power1(x, n);
@@ -569,7 +587,8 @@ bool isValid(vector<int> &pos, int row, int col) {
     }
     return true;
 }
-void solveNQueensDFS(vector<int> &pos, int row, vector<vector<string> > &res, size_t& count) {
+
+void solveNQueensDFS(vector<int> &pos, int row, vector<vector<string> > &res, size_t &count) {
     int n = pos.size();
     if (row == n) {
         ++count;
@@ -580,7 +599,7 @@ void solveNQueensDFS(vector<int> &pos, int row, vector<vector<string> > &res, si
         res.push_back(out);
     } else {
         for (int col = 0; col < n; ++col) {
-            if (isValid(pos, row ,col)) {
+            if (isValid(pos, row, col)) {
                 pos[row] = col;
                 solveNQueensDFS(pos, row + 1, res, count);
                 pos[row] = -1;
@@ -588,6 +607,7 @@ void solveNQueensDFS(vector<int> &pos, int row, vector<vector<string> > &res, si
         }
     }
 }
+
 vector<vector<string> > solveNQueens(int n) {
     vector<vector<string> > res;
     vector<int> pos(n, -1);
@@ -616,7 +636,8 @@ vector<int> spiralOrder1(vector<vector<int> > &matrix) {
     }
     return res;
 }
-vector<int> spiralOrder2(vector<vector<int>>& matrix) {
+
+vector<int> spiralOrder2(vector<vector<int>> &matrix) {
     if (matrix.empty() || matrix[0].empty()) return {};
     int m = matrix.size(), n = matrix[0].size();
     vector<int> res;
@@ -634,9 +655,9 @@ vector<int> spiralOrder2(vector<vector<int>>& matrix) {
     return res;
 }
 
-vector<Interval> mergeIntervals(vector<Interval>& intervals) {
+vector<Interval> mergeIntervals(vector<Interval> &intervals) {
     if (intervals.empty()) return {};
-    sort(intervals.begin(), intervals.end(), [](Interval &a, Interval &b) {return a.start < b.start;});
+    sort(intervals.begin(), intervals.end(), [](Interval &a, Interval &b) { return a.start < b.start; });
     vector<Interval> res{intervals[0]};
     for (int i = 1; i < intervals.size(); ++i) {
         if (res.back().end < intervals[i].start) {
@@ -651,7 +672,7 @@ vector<Interval> mergeIntervals(vector<Interval>& intervals) {
 int lengthOfLastWord(string s) {
     int right = s.size() - 1, res = 0;
     while (right >= 0 && s[right] == ' ') --right;
-    while (right >= 0 && s[right] != ' ' ) {
+    while (right >= 0 && s[right] != ' ') {
         --right;
         ++res;
     }
@@ -671,10 +692,10 @@ vector<vector<int> > subsets(vector<int> &S) {
     return res;
 }
 
-int removeDuplicates2(vector<int>& nums) {
+int removeDuplicates2(vector<int> &nums) {
     if (nums.size() <= 2) return nums.size();
     int index = 2;
-    for (int i = 2; i < nums.size(); i++){
+    for (int i = 2; i < nums.size(); i++) {
         if (nums[i] != nums[index - 2])
             nums[index++] = nums[i];
     }
@@ -699,7 +720,8 @@ ListNode* removeDuplicatesList1(ListNode* head) {
     }
     return head;
 }
-ListNode* removeDuplicatesList2(ListNode *head) {
+
+ListNode* removeDuplicatesList2(ListNode* head) {
     if (!head || !head->next) return head;
 
     ListNode* dummy = new ListNode(-1);
@@ -707,7 +729,7 @@ ListNode* removeDuplicatesList2(ListNode *head) {
     ListNode* prev = dummy;
     while (prev->next) {
         ListNode* cur = prev->next;
-        while (cur->next && cur->next->val == cur->val){
+        while (cur->next && cur->next->val == cur->val) {
             auto* p = cur;
             cur = cur->next;
             delete p;
@@ -724,7 +746,7 @@ ListNode* removeDuplicatesList2(ListNode *head) {
 }
 
 void testRemoveDuplicates() {
-    std::list<int> datas = {1,1,2,3,3,};
+    std::list<int> datas = {1, 1, 2, 3, 3,};
     auto* head = createList2(datas);
     head = removeDuplicatesList2(head);
     printList(head);
@@ -762,22 +784,22 @@ ListNode* reverseBetween(ListNode* head, int m, int n) {
 }
 
 void testReverseBetween() {
-    std::list<int> datas = {1,2,3,4,5,};
+    std::list<int> datas = {1, 2, 3, 4, 5,};
     auto* head = createList2(datas);
     head = reverseBetween(head, 2, 8);
     printList(head);
 }
 
-ListNode *partitionList1(ListNode *head, int x) {
+ListNode* partitionList1(ListNode* head, int x) {
     if (!head || !head->next) {
         return head;
     }
-    ListNode *dummy1 = new ListNode(-1);
-    ListNode *dummy2 = new ListNode(-1);
+    ListNode* dummy1 = new ListNode(-1);
+    ListNode* dummy2 = new ListNode(-1);
 
-    ListNode *last1 = dummy1;
-    ListNode *last2 = dummy2;
-    ListNode *cur = head;
+    ListNode* last1 = dummy1;
+    ListNode* last2 = dummy2;
+    ListNode* cur = head;
     while (cur) {
         if (cur->val < x) {
             last1->next = cur;
@@ -795,13 +817,13 @@ ListNode *partitionList1(ListNode *head, int x) {
 
 
 void testPartionList() {
-    std::list<int> datas = {1,2,4,2,3,5,};
+    std::list<int> datas = {1, 2, 4, 2, 3, 5,};
     auto* head = createList2(datas);
     head = partitionList1(head, 3);
     printList(head);
 }
 
-void setMatrixZeros1(vector<vector<int>>& data) {
+void setMatrixZeros1(vector<vector<int>> &data) {
     if (data.empty() || data[0].empty()) return;
     size_t m = data.size();
     size_t n = data[0].size();
@@ -830,6 +852,7 @@ void setMatrixZeros1(vector<vector<int>>& data) {
         }
     }
 }
+
 void setMatrixZeros2(vector<vector<int>> &matrix) {
     if (matrix.empty() || matrix[0].empty()) return;
     int m = matrix.size(), n = matrix[0].size();
@@ -865,9 +888,9 @@ void setMatrixZeros2(vector<vector<int>> &matrix) {
 
 void testZeroMatrix() {
     vector<vector<int>> data = {
-            {0,1,2,0},
-            {3,4,5,2},
-            {1,3,1,5},
+            {0, 1, 2, 0},
+            {3, 4, 5, 2},
+            {1, 3, 1, 5},
     };
     setMatrixZeros2(data);
     cout << data << endl;
@@ -888,6 +911,7 @@ int largestRectangleArea(vector<int> &height) {
     }
     return res;
 }
+
 int maximalRectangle1(vector<vector<int>> &matrix) {
     int res = 0;
     vector<int> height;
@@ -900,6 +924,7 @@ int maximalRectangle1(vector<vector<int>> &matrix) {
     }
     return res;
 }
+
 int maximalRectangle2(vector<vector<int>> &matrix) {
     if (matrix.empty() || matrix[0].empty()) return 0;
     int res = 0, m = matrix.size(), n = matrix[0].size();
@@ -915,7 +940,8 @@ int maximalRectangle2(vector<vector<int>> &matrix) {
             while (!s.empty() && h[s.top()] >= h[j]) {
                 // while循环一次都不执行的情况下，只积累栈，栈顶元素对应的高度逐步增加
                 // 每次遇到h[j]<=栈中元素时，则计算栈中保存的大于当前h[j]的所有元素的面积
-                int cur = s.top(); s.pop();
+                int cur = s.top();
+                s.pop();
                 res = max(res, h[cur] * (s.empty() ? j : (j - s.top() - 1)));
                 // 此时s.top()保存的是j的上一个元素的上一个元素，即j - s.top()==2
                 // 因为j的上一个元素已经出栈给cur
@@ -925,6 +951,7 @@ int maximalRectangle2(vector<vector<int>> &matrix) {
     }
     return res;
 }
+
 void testMaximalRectangle() {
     vector<vector<int>> data = {
             {1, 1, 0, 0, 1},
@@ -980,12 +1007,12 @@ int largestRectangleArea1(vector<int> &height) {
 // A的长度是m + n
 void mergeArrays(int A[], int m, int B[], int n) {
     int count = m + n - 1;
-    --m; --n;
+    --m;
+    --n;
     while (m >= 0 && n >= 0) A[count--] = A[m] > B[n] ? A[m--] : B[n--];
     while (n >= 0) A[count--] = B[n--];
     // 不需考虑m>=0的情况，因为本身就要放在A中
 }
-
 
 
 int main() {

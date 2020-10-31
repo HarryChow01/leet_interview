@@ -5,7 +5,7 @@
 #include <iostream>
 #include "BlockingQueue.h"
 
-template <typename T>
+template<typename T>
 T BlockingQueue<T>::take() {
     std::unique_lock<std::mutex> lock(mutex_);
     cvNotEmpty_.wait(lock, [this] { return !data_.empty(); });
@@ -15,8 +15,8 @@ T BlockingQueue<T>::take() {
     return front;
 }
 
-template <typename T>
-void BlockingQueue<T>::put(const T& item) {
+template<typename T>
+void BlockingQueue<T>::put(const T &item) {
     std::unique_lock<std::mutex> lock(mutex_);
     cvNotFull_.wait(lock, [this] { return data_.size() < capacity_; });
     data_.push_back(item);

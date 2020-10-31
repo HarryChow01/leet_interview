@@ -1,5 +1,3 @@
-
-#include <cstdlib>
 #include <cstdio>
 #include <cstring>
 #include <string>
@@ -7,16 +5,14 @@
 #include <list>
 #include <stack>
 #include <map>
-#include <array>
 #include <iostream>
-
 
 using namespace std;
 
-
 struct ListNode {
     int val;
-    struct ListNode *next;
+    struct ListNode* next;
+
     explicit ListNode(int x = 0) :
             val(x), next(nullptr) {
     }
@@ -24,53 +20,56 @@ struct ListNode {
 
 struct RandomListNode {
     int label;
-    struct RandomListNode *next, *random;
+    struct RandomListNode* next, * random;
+
     explicit RandomListNode(int x = 0) :
             label(x), next(nullptr), random(nullptr) {
     }
 };
 
-ListNode *createList(const size_t len) {
-
-    ListNode *p = nullptr;
-    ListNode *q = nullptr;
-
-    auto* ret = new ListNode(1);
-    q = ret;
-    for(int i = 1; i < len; i++) {
-        p = new ListNode(1 + i);
-        q->next = p;
-        q = p;
+ListNode* createList(const size_t kLen) {
+    if (kLen == 0) {
+        return nullptr;
     }
-    return ret;
+    auto* dumb = new ListNode(-1);
+    auto* tail = dumb;
+
+    for (int i = 0; i < kLen; i++) {
+        tail->next = new ListNode(1 + i);
+        tail = tail->next;
+    }
+    auto* pHead = dumb->next;
+    delete dumb;
+    dumb = nullptr;
+    return pHead;
 }
 
-void printList(ListNode *head) {
+void printList(ListNode* head) {
     if (!head) {
         return;
     }
-    ListNode *p = head;
+    ListNode* p = head;
     printf("List:\n");
-    while(p) {
+    while (p) {
         printf("%d ", p->val);
         p = p->next;
     }
     printf("\n");
 }
 
-void deleteList(ListNode *head) {
-    ListNode *p = head;
-    while(p) {
-        ListNode *q = p;
-        p = p->next;
-        delete(q);
+void deleteList(ListNode* head) {
+    ListNode* p = nullptr;
+    while (head) {
+        p = head;
+        head = head->next;
+        delete (p);
     }
 }
 
 // 倒序打印链表
-void printListReverse(ListNode *head) {
+void printListReverse(ListNode* head) {
     std::stack<int> nodes;
-    ListNode *node = head;
+    ListNode* node = head;
     while (node) {
         nodes.push(node->val);
         node = node->next;
@@ -81,13 +80,12 @@ void printListReverse(ListNode *head) {
     }
 }
 
-//已测试
 // https://blog.csdn.net/ljyljyok/article/details/77996029
-ListNode *reverseList(ListNode *head) {
+ListNode* reverseList(ListNode* head) {
     // head每次指向当前拿下来的一个节点；
-    ListNode *next; // 指向待合并的链表
-    ListNode *prev = nullptr;   // 指向待返回的链表
-    while(head != nullptr) {
+    ListNode* next; // 指向待合并的链表
+    ListNode* prev = nullptr;   // 指向待返回的链表
+    while (head != nullptr) {
         next = head->next;
         head->next = prev;
         prev = head;
@@ -98,91 +96,154 @@ ListNode *reverseList(ListNode *head) {
 
 // 递归逆序单链表
 // https://blog.csdn.net/ljyljyok/article/details/77996029
-ListNode *reverseList2(ListNode *head) {
+ListNode* reverseList2(ListNode* head) {
     if (!head || !head->next) {
         return head;
     }
-    ListNode *newHead = reverseList2(head->next);
+    ListNode* newHead = reverseList2(head->next);
     head->next->next = head;
     head->next = nullptr;
     return newHead;
 }
 
+ListNode* reverseListByNStep(ListNode* head, const size_t kStep) {
+    if (!head || kStep < 1) {
+        return head;
+    }
+    auto* dump = new ListNode(-1);
+    dump->next = head;
+    size_t len = 0;
+    auto* prev = dump;
+    ListNode* partHead = nullptr;
+    auto* tail = dump;
+
+    while (head) {
+        if (0 == len) {
+            partHead = head;
+        }
+        while (head && len < kStep) {
+            head = head->next;
+            prev = prev->next;
+            ++len;
+        }
+        if (kStep == len) {
+            prev->next = nullptr;
+            tail->next = reverseList(partHead);
+            tail = partHead;
+            tail->next = head;
+            prev = tail;
+            len = 0;
+        }
+    }
+    auto* pHead = dump->next;
+    delete dump;
+    return pHead;
+}
 
 void testReverseList() {
-    ListNode *head = createList(3);
+    ListNode* head = createList(8);
     printList(head);
-    head = reverseList(head);
-    printList(head);
-
-    head = createList(3);
-    printList(head);
-    head = reverseList2(head);
+    head = reverseListByNStep(head, 4);
     printList(head);
 
     deleteList(head);
 }
 
-ListNode *getLastKListNode(ListNode *head, const size_t k) {
-    if(!head || k < 1)
+ListNode* getLastKListNode(ListNode* head, const size_t k) {
+    if (!head || k < 1)
         return nullptr;
 
-    ListNode *ret = head;
-    ListNode *p = head;
+    ListNode* q = head;
+    ListNode* p = head;
     int pos = 0;
 
-    while( p && (pos < k)) {
+    while (p && (pos < k)) {
         pos++;
         p = p->next;
     }
 
-    // possible: p is nullptr,when pos == k, now length of list is K;
-    if(pos != k)
+    if (pos != k)
         return nullptr;
-        
-    while(p) {
+
+    while (p) {
         p = p->next;
-        ret = ret->next;
+        q = q->next;
     }
-    return ret;
+    return q;
 }
 
 void testGetLastKListNode() {
-    ListNode *head = createList(10);
+    ListNode* head = createList(10);
     printList(head);
-    
-    ListNode *pLastKNode = getLastKListNode(head, 8);
-    if(pLastKNode) {
+
+    ListNode* pLastKNode = getLastKListNode(head, 8);
+    if (pLastKNode) {
         printf("last 8 : %d\n", pLastKNode->val);
     }
-    
+
     pLastKNode = getLastKListNode(head, 1);
-    if(pLastKNode) {
+    if (pLastKNode) {
         printf("last 1 : %d\n", pLastKNode->val);
     }
-    
+
     pLastKNode = getLastKListNode(head, 10);
-    if(pLastKNode) {
+    if (pLastKNode) {
         printf("last 10 : %d\n", pLastKNode->val);
     }
-    
+
     deleteList(head);
+}
+
+ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
+    ListNode* dumb = new ListNode(-1);
+    ListNode* cur = dumb;
+    while (l1 && l2) {
+        if (l1->val < l2->val) {
+            cur->next = l1;
+            l1 = l1->next;
+        } else {
+            cur->next = l2;
+            l2 = l2->next;
+        }
+        cur = cur->next;
+    }
+    if (l1) {
+        cur->next = l1;
+    } else {
+        cur->next = l2;
+    }
+    auto* pHead = dumb->next;
+    delete dumb;
+    return pHead;
+}
+
+ListNode* mergeKLists(vector<ListNode*> &lists) {
+    if (lists.size() == 0) return nullptr;
+    int n = lists.size();
+    while (n > 1) {
+        int k = (n + 1) / 2;
+        for (int i = 0; i < n / 2; ++i) {
+            lists[i] = mergeTwoLists(lists[i], lists[i + k]);
+        }
+        n = k;
+    }
+    return lists[0];
 }
 
 
 // 两个链表合并，递归实现
-ListNode *mergeLists(ListNode *pHead1, ListNode *pHead2) {
+ListNode* mergeLists(ListNode* pHead1, ListNode* pHead2) {
     //判断指针是否为空
-    if(pHead1 == nullptr){
+    if (!pHead1) {
         return pHead2;
-    } else if(pHead2 == nullptr){
+    } else if (!pHead2) {
         return pHead1;
     }
-    ListNode *pMergedHead = nullptr;
-    if(pHead1->val < pHead2->val){
+    ListNode* pMergedHead = nullptr;
+    if (pHead1->val < pHead2->val) {
         pMergedHead = pHead1;
         pMergedHead->next = mergeLists(pHead1->next, pHead2);
-    } else{
+    } else {
         pMergedHead = pHead2;
         pMergedHead->next = mergeLists(pHead1, pHead2->next);
     }
@@ -190,21 +251,21 @@ ListNode *mergeLists(ListNode *pHead1, ListNode *pHead2) {
 }
 
 void testMergeLists() {
-    ListNode *pHead1 = createList(5);
-    ListNode *pHead2 = createList(3);
+    ListNode* pHead1 = createList(5);
+    ListNode* pHead2 = createList(3);
     printList(pHead1);
     printList(pHead2);
-    pHead1 = mergeLists(pHead1, pHead2);
+    pHead1 = mergeTwoLists(pHead1, pHead2);
     printList(pHead1);
 }
 
 // 带有随机指针的链表复制
-RandomListNode *randomListClone1(RandomListNode *pHead) {
-    if (pHead == nullptr)
+RandomListNode* randomListClone1(RandomListNode* pHead) {
+    if (!pHead)
         return nullptr;
-    RandomListNode *p = pHead, *ret = pHead;
+    RandomListNode* p = pHead, * ret = pHead;
     for (; p != nullptr; p = p->next->next) {
-        auto *now = new RandomListNode(p->label);
+        auto* now = new RandomListNode(p->label);
         now->next = p->next;
         p->next = now;
     }
@@ -212,32 +273,33 @@ RandomListNode *randomListClone1(RandomListNode *pHead) {
         if (p->random != nullptr)
             p->next->random = p->random->next;
     for (p = pHead, ret = p->next; p->next != nullptr;
-        pHead = p->next, p->next = p->next->next, p = pHead);
+         pHead = p->next, p->next = p->next->next, p = pHead);
 
     return ret;
 }
 
-RandomListNode *copyList(RandomListNode *pHead, map<RandomListNode *, RandomListNode *> &mp) {
-    if (pHead == nullptr)
+RandomListNode* copyList(RandomListNode* pHead, map<RandomListNode*, RandomListNode*> &mp) {
+    if (!pHead)
         return nullptr;
-    auto *ret = new RandomListNode(pHead->label);
+    auto* ret = new RandomListNode(pHead->label);
     mp[pHead] = ret;
     ret->next = copyList(pHead->next, mp);
     return ret;
 }
-RandomListNode *randomListClone2(RandomListNode *pHead) {
-    map<RandomListNode *, RandomListNode *> mp;
-    auto *ret = copyList(pHead, mp);
-    for (RandomListNode *p = pHead, *q = ret; p != nullptr; p = p->next, q = q->next)
+
+RandomListNode* randomListClone2(RandomListNode* pHead) {
+    map<RandomListNode*, RandomListNode*> mp;
+    auto* ret = copyList(pHead, mp);
+    for (RandomListNode* p = pHead, * q = ret; p != nullptr; p = p->next, q = q->next)
         q->random = mp[p->random];
     return ret;
 }
 
-RandomListNode *randomListClone3(RandomListNode *pHead) {
-    if (pHead == nullptr)
+RandomListNode* randomListClone3(RandomListNode* pHead) {
+    if (!pHead)
         return nullptr;
-    map<RandomListNode *, RandomListNode *> mp;
-    RandomListNode *ret = new RandomListNode(pHead->label), *q = ret;
+    map<RandomListNode*, RandomListNode*> mp;
+    RandomListNode* ret = new RandomListNode(pHead->label), * q = ret;
     mp[pHead] = ret;
     for (auto p = pHead->next; p != nullptr; p = p->next, q = q->next) {
         q->next = new RandomListNode(p->label);
@@ -245,14 +307,14 @@ RandomListNode *randomListClone3(RandomListNode *pHead) {
     }
     q->next = nullptr;
 
-    for (RandomListNode *p = pHead, *q = ret; p != nullptr; p = p->next, q = q->next)
+    for (RandomListNode* p = pHead, * q = ret; p != nullptr; p = p->next, q = q->next)
         q->random = mp[p->random];
     return ret;
 }
 
 
 // Intersection of Two Linked Lists, O(1) Storage, so can not use map or set.
-int getLength(ListNode *head) {
+int getLength(ListNode* head) {
     int cnt = 0;
     while (head) {
         ++cnt;
@@ -260,7 +322,8 @@ int getLength(ListNode *head) {
     }
     return cnt;
 }
-ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
+
+ListNode* getIntersectionNode(ListNode* headA, ListNode* headB) {
     if (!headA || !headB) return nullptr;
     int lenA = getLength(headA), lenB = getLength(headB);
     if (lenA < lenB) {
@@ -276,39 +339,40 @@ ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
 }
 
 
-unsigned int getListLength(ListNode *pHead){
+unsigned int getListLength(ListNode* pHead) {
     size_t length = 0;
-    while(pHead != nullptr){
+    while (pHead != nullptr) {
         pHead = pHead->next;
         length++;
     }
     return length;
 }
+
 // 获取两个链表的第一个公共节点
-ListNode *FindFirstCommonNode( ListNode *pHead1, ListNode *pHead2) {
+ListNode* FindFirstCommonNode(ListNode* pHead1, ListNode* pHead2) {
     // 如果有一个链表为空，则返回结果为空
-    if(pHead1 == nullptr || pHead2 == nullptr){
+    if (!pHead1 || !pHead2) {
         return nullptr;
     }
     // 获得两个链表的长度
     unsigned int len1 = getListLength(pHead1);
     unsigned int len2 = getListLength(pHead2);
     // 默认 pHead1 长， pHead2短，如果不是，再更改
-    ListNode *pHeadLong = pHead1;
-    ListNode *pHeadShort = pHead2;
+    ListNode* pHeadLong = pHead1;
+    ListNode* pHeadShort = pHead2;
     int lengthDif = len1 - len2;
     // 如果 pHead1 比 pHead2 小
-    if(len1 < len2){
-        ListNode *pHeadLong = pHead2;
-        ListNode *pHeadShort = pHead1;
+    if (len1 < len2) {
+        ListNode* pHeadLong = pHead2;
+        ListNode* pHeadShort = pHead1;
         lengthDif = len2 - len1;
     }
     // 将长链表的前面部分去掉，使两个链表等长
-    for(int i = 0; i < lengthDif; i++){
+    for (int i = 0; i < lengthDif; i++) {
         pHeadLong = pHeadLong->next;
     }
 
-    while(pHeadLong != nullptr && pHeadShort != nullptr && pHeadLong != pHeadShort){
+    while (pHeadLong != nullptr && pHeadShort != nullptr && pHeadLong != pHeadShort) {
         pHeadLong = pHeadLong->next;
         pHeadShort = pHeadShort->next;
     }
@@ -316,38 +380,39 @@ ListNode *FindFirstCommonNode( ListNode *pHead1, ListNode *pHead2) {
 }
 
 // 使用快慢指针，找到任意的一个环中结点
-ListNode *meetingNode(ListNode *pHead){
+ListNode* meetingNode(ListNode* pHead) {
     if (!pHead || !pHead->next) {
         return nullptr;
     }
-    ListNode *pSlow = pHead->next;
-    ListNode *pFast = pSlow->next;
-    while(pFast != nullptr && pSlow != nullptr){
-        if(pFast == pSlow){
+    ListNode* pSlow = pHead->next;
+    ListNode* pFast = pSlow->next;
+    while (pFast != nullptr && pSlow != nullptr) {
+        if (pFast == pSlow) {
             return pFast;
         }
         pSlow = pSlow->next;
         pFast = pFast->next;
-        if(pFast != nullptr){
+        if (pFast != nullptr) {
             pFast = pFast->next;
         }
     }
     return nullptr;
 }
+
 // 3 steps: (1)find fast and slow pointer meet (2)find the length of circle
 //          (3)let p1(from head) go length of circle, the p1 and p2 go on same step, when meet then stop
-ListNode *entryNodeOfLoop(ListNode *pHead) {
-    if (pHead == nullptr) {
+ListNode* entryNodeOfLoop(ListNode* pHead) {
+    if (!pHead) {
         return nullptr;
     }
-    ListNode *meetingnode = meetingNode(pHead);
-    if (meetingnode == nullptr) {
+    ListNode* meetingnode = meetingNode(pHead);
+    if (!meetingnode) {
         return nullptr;
     }
     // 回环链表结点个数
     int nodesloop = 1;
     // 找到环中结点个数
-    ListNode *pNode1 = meetingnode;
+    ListNode* pNode1 = meetingnode;
     while (pNode1->next != meetingnode) {
         pNode1 = pNode1->next;
         nodesloop++;
@@ -358,20 +423,19 @@ ListNode *entryNodeOfLoop(ListNode *pHead) {
         pNode1 = pNode1->next;
     }
     // 两个指针同时移动，找到环入口
-    ListNode *pNode2 = pHead;
-    while (pNode1 != pNode2){
+    ListNode* pNode2 = pHead;
+    while (pNode1 != pNode2) {
         pNode1 = pNode1->next;
         pNode2 = pNode2->next;
     }
     return pNode1;
 }
 
-
-ListNode *deleteDuplicates(ListNode *head) {
+void deleteDuplicates(ListNode* head) {
     if (!head)
-        return nullptr;
-    ListNode *prev = head;
-    ListNode *cur = head->next;
+        return;
+    ListNode* prev = head;
+    ListNode* cur = head->next;
     while (cur) {
         if (prev->val == cur->val) {
             prev->next = cur->next;
@@ -383,7 +447,7 @@ ListNode *deleteDuplicates(ListNode *head) {
     }
 }
 
-void recurRemove(ListNode *prev, ListNode *cur) {
+void recurRemove(ListNode* prev, ListNode* cur) {
     if (!prev || !cur)
         return;
     if (prev->val == cur->val) {
@@ -395,7 +459,7 @@ void recurRemove(ListNode *prev, ListNode *cur) {
     }
 }
 
-ListNode *deleteDuplicatesRecur(ListNode *head) {
+ListNode* deleteDuplicatesRecur(ListNode* head) {
     if (!head)
         return nullptr;
     ListNode dummy;
@@ -404,12 +468,12 @@ ListNode *deleteDuplicatesRecur(ListNode *head) {
     return dummy.next;
 }
 
-ListNode *createDuplicatesList() {
+ListNode* createDuplicatesList() {
     vector<int> values = {1, 2, 2, 3, 4, 4};
     if (values.empty())
         return nullptr;
-    ListNode *head = new ListNode(values[0]);
-    ListNode *p = head;
+    ListNode* head = new ListNode(values[0]);
+    ListNode* p = head;
     for (size_t i = 1; i < values.size(); ++i) {
         p->next = new ListNode(values[i]);
         p = p->next;
@@ -417,45 +481,14 @@ ListNode *createDuplicatesList() {
     return head;
 }
 
-ListNode *mergeTwoLists(ListNode *l1, ListNode *l2) {
-    ListNode *head = new ListNode(-1);
-    ListNode *cur = head;
-    while (l1 && l2) {
-        if (l1->val < l2->val) {
-            cur->next = l1;
-            l1 = l1->next;
-        } else {
-            cur->next = l2;
-            l2 = l2->next;
-        }
-        cur = cur->next;
-    }
-    if (l1) cur->next = l1;
-    if (l2) cur->next = l2;
-    return head->next;
-}
-ListNode *mergeKLists(vector<ListNode *> &lists) {
-    if (lists.size() == 0) return nullptr;
-    int n = lists.size();
-    while (n > 1) {
-        int k = (n + 1) / 2;
-        for (int i = 0; i < n / 2; ++i) {
-            lists[i] = mergeTwoLists(lists[i], lists[i + k]);
-        }
-        n = k;
-    }
-    return lists[0];
-}
-
-
 // list sort quick Time: n*log(n)-n^2  storage: log(n)-n
-ListNode *listPartition(ListNode *head, ListNode *tail) {
+ListNode* listPartition(ListNode* head, ListNode* tail) {
     if (!head) {
         return nullptr;
     }
     int pivot = head->val;
-    ListNode *p = head;
-    ListNode *q = head->next;
+    ListNode* p = head;
+    ListNode* q = head->next;
     while (q != tail) {
         if (q->val < pivot) {
             p = p->next;
@@ -469,23 +502,23 @@ ListNode *listPartition(ListNode *head, ListNode *tail) {
     return p;
 }
 
-void listQuickSort(ListNode *head, ListNode *tail) {
+void listQuickSort(ListNode* head, ListNode* tail) {
     if (!head) {
         return;
     }
     if (head != tail) {
-        ListNode *p = listPartition(head, tail);
+        ListNode* p = listPartition(head, tail);
         listQuickSort(head, p);
         listQuickSort(p->next, tail);
     }
 }
 
-ListNode *listMergeSort(ListNode *head) {
+ListNode* listMergeSort(ListNode* head) {
     if (!head || !head->next)
         return head;
     /* 找到链表中间的节点，prev代表中间节点的前一个节点 */
-    ListNode * slow = head;
-    ListNode * fast = head->next;
+    ListNode* slow = head;
+    ListNode* fast = head->next;
     while (fast && fast->next) {
         slow = slow->next;
         fast = fast->next->next;
@@ -495,17 +528,16 @@ ListNode *listMergeSort(ListNode *head) {
     slow = slow->next;
     fast->next = nullptr;
     /* 对左右两部分分别进行切分和排序　*/
-    ListNode * lhs = listMergeSort(head);
-    ListNode * rhs = listMergeSort(slow);
+    ListNode* lhs = listMergeSort(head);
+    ListNode* rhs = listMergeSort(slow);
     /* 返回的lhs和rhs是已经排好序的链表，接下来将这两个有序链表合并成一个 */
     return mergeTwoLists(lhs, rhs);
 }
 
 
-
-ListNode *createListSort() {
-    auto *head = new ListNode(4);
-    ListNode *help = head;
+ListNode* createListSort() {
+    auto* head = new ListNode(4);
+    ListNode* help = head;
     help->next = new ListNode(1);
     help = help->next;
     help->next = new ListNode(6);
@@ -525,7 +557,7 @@ ListNode *createListSort() {
 int main(int argc, char* argv[]) {
     printf("Into main\n\n");
 
-    //testReverseList();
+    testReverseList();
     //testGetLastKListNode();
     //testMergeLists();
     //ListNode *head = createList(8);
@@ -537,12 +569,12 @@ int main(int argc, char* argv[]) {
     //deleteDuplicatesRecur(head);
 
     // list sort
-    ListNode *head = createListSort();
-    printList(head);
+    //ListNode* head = createListSort();
+    //printList(head);
     //listQuickSort(head, nullptr);
-    head = listMergeSort(head);
-    printList(head);
-    deleteList(head);
+    //head = listMergeSort(head);
+    //printList(head);
+    //deleteList(head);
 
     printf("\n\nreturn from main\n");
 }

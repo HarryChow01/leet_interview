@@ -5,6 +5,6 @@
 #include "singleton.h"
 
 int main() {
-    Singleton1 * pInstance = Singleton1::getInstance();
+    Singleton1* pInstance = Singleton1::getInstance();
     Singleton2 &singleton2 = Singleton2::getInstance();
 }

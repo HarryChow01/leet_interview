@@ -15,7 +15,7 @@
 
 class Singleton1 {
 public:
-    static Singleton1 *getInstance() {
+    static Singleton1* getInstance() {
         if (nullptr == instance_) {
             std::lock_guard<std::mutex> lock(mutex_);
             if (nullptr == instance_) {
@@ -24,29 +24,32 @@ public:
         }
         return instance_;
     }
+
 private:
     static std::mutex mutex_;
-    static Singleton1 *instance_;
+    static Singleton1* instance_;
+
     Singleton1() = default; // Singleton1() {};
-    Singleton1(const Singleton1& singleton1) = delete;      // 或者只声明不实现
-    Singleton1& operator=(const Singleton1& singleton1) = delete;   // 或者只声明不实现
+    Singleton1(const Singleton1 &singleton1) = delete;      // 或者只声明不实现
+    Singleton1 &operator=(const Singleton1 &singleton1) = delete;   // 或者只声明不实现
 };
+
 Singleton1* Singleton1::instance_ = nullptr;
 
 // Gcc 4.0以上推荐的做法
 class Singleton2 {
 public:
-    static Singleton2 & getInstance() {
+    static Singleton2 &getInstance() {
         static Singleton2 instance;
         return instance;
     }
+
 private:
     Singleton2() = default; // Singleton2() {};
-    Singleton2(const Singleton2& singleton2) = delete;
-    Singleton2& operator=(const Singleton2& singleton2) = delete;
+    Singleton2(const Singleton2 &singleton2) = delete;
+
+    Singleton2 &operator=(const Singleton2 &singleton2) = delete;
 };
-
-
 
 
 #endif //LEET_INTERVIEW_SINGLETON_H

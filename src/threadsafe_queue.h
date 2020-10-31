@@ -21,7 +21,7 @@ public:
         data_queue_ = rhs.data_queue_;
     }
 
-    void push(const T& new_value) { //入队操作
+    void push(const T &new_value) { //入队操作
         std::lock_guard<std::mutex> lock(mutex_);
         data_queue_.push(new_value);
         data_cond_.notify_one();
@@ -66,6 +66,7 @@ public:
     }
 
     using size_type = typename std::queue<T>::size_type;
+
     size_type size() const {
         std::lock_guard<std::mutex> lock(mutex_);
         return data_queue_.size();

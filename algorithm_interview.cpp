@@ -23,7 +23,7 @@ using namespace std;
  */
 int getSumOfArray() {
 
-    vector<int> data = {1,-2,3,5,-1,2}; // result = 9, left = 2, right = 5
+    vector<int> data = {1, -2, 3, 5, -1, 2}; // result = 9, left = 2, right = 5
     assert(!data.empty());
 
     size_t left = 0;
@@ -34,15 +34,15 @@ int getSumOfArray() {
     int maxSum = data[0];
     int curSum = data[0];
     // 遍历所有元素
-    for(size_t i = 1; i < data.size(); i++){
+    for (size_t i = 1; i < data.size(); i++) {
         //curSum = std::max(data[i], data[i] + curSum);
         // 等同于下面if else；
 
         // 如果当前和小于等于0，说明之前的是负数，则抛弃前面的和，重新计算
-        if(curSum <= 0){ //状态转移方程：dp[j]<0,dp[k]=max(dp[k-1]+a[k],a[k])
+        if (curSum <= 0) { //状态转移方程：dp[j]<0,dp[k]=max(dp[k-1]+a[k],a[k])
             curSum = data[i];
             begin = i;
-        } else{ // 如果没有问题，直接累加
+        } else { // 如果没有问题，直接累加
             curSum += data[i];
         }
 
@@ -50,7 +50,7 @@ int getSumOfArray() {
         //等同于下面这一句；
 
         // 更新最大和
-        if(curSum > maxSum){
+        if (curSum > maxSum) {
             maxSum = curSum;
             left = begin;
             right = i;
@@ -72,9 +72,9 @@ int getSumOf2DArray() {
     const size_t kRowNum = 3;
     const size_t kColNum = 3;
     int data[kRowNum][kColNum] = {
-            {-1,3,-1},
-            {2,-1,3},
-            {-3,1,2},
+            {-1, 3,  -1},
+            {2,  -1, 3},
+            {-3, 1,  2},
     };
     int PS[kRowNum + 1][kColNum + 1];
     for (size_t i = 0; i <= kRowNum; ++i) {
@@ -95,14 +95,14 @@ int getSumOf2DArray() {
             int64_t partSum = INT32_MIN;
             for (size_t j = 1; j <= kColNum; ++j) {
                 int64_t curSum = PS[iEnd][j] - PS[iStart - 1][j] -
-                        PS[iEnd][j - 1] + PS[iStart - 1][j - 1];
+                                 PS[iEnd][j - 1] + PS[iStart - 1][j - 1];
                 partSum = std::max(curSum, partSum + curSum);
                 allSum = std::max(allSum, partSum);
             }
         }
     }
     cout << "allSum: " << allSum << endl;
-    return (int)allSum;
+    return (int) allSum;
 }
 
 
@@ -114,13 +114,11 @@ int getSumOf2DArray() {
  */
 
 // 输出组成LCS的字符串，用一个二维数组记录要打印的状态
-void printLCS(vector<vector<size_t>>& vec, string str, size_t i, size_t j) {
-    if (i == 0 || j == 0)
-    {
+void printLCS(vector<vector<size_t>> &vec, string str, size_t i, size_t j) {
+    if (i == 0 || j == 0) {
         return;
     }
-    if (vec[i][j] == 0)
-    {
+    if (vec[i][j] == 0) {
         printLCS(vec, str, i - 1, j - 1);
         cout << str[i - 1];
     } else if (vec[i][j] == 1) {
@@ -168,11 +166,11 @@ size_t getLCS2() {
     vector<vector<size_t>> lcs(2, vector<size_t>(s2.size() + 1, 0));
 
     for (size_t i = 1; i <= s1.size(); ++i) {
-        for(size_t j = 1; j <= s2.size(); ++j) {
-            if(s1[i-1] == s2[j-1]) {
-                lcs[i%2][j] = lcs[(i-1)%2][j-1] + 1;
+        for (size_t j = 1; j <= s2.size(); ++j) {
+            if (s1[i - 1] == s2[j - 1]) {
+                lcs[i % 2][j] = lcs[(i - 1) % 2][j - 1] + 1;
             } else {
-                lcs[i%2][j] = std::max(lcs[(i-1)%2][j], lcs[i%2][j-1]);
+                lcs[i % 2][j] = std::max(lcs[(i - 1) % 2][j], lcs[i % 2][j - 1]);
             }
         }
     }
@@ -199,10 +197,10 @@ size_t editDistance() {
     }
     for (size_t i = 1; i <= lenA; i++) {
         for (size_t j = 1; j <= lenB; j++) {
-            if (s1[i-1] == s2[j-1]) {
-                d[i][j] = d[i-1][j-1];
+            if (s1[i - 1] == s2[j - 1]) {
+                d[i][j] = d[i - 1][j - 1];
             } else {
-                d[i][j] = std::min(d[i-1][j-1], std::min(d[i][j-1], d[i-1][j])) + 1;
+                d[i][j] = std::min(d[i - 1][j - 1], std::min(d[i][j - 1], d[i - 1][j])) + 1;
             }
         }
     }
@@ -214,7 +212,7 @@ size_t editDistance() {
  * 动态规划：硬币找零问题，二维数组保存
  */
 size_t coinsChange1(size_t sum) {
-    vector<size_t> coinValues = {1,2,5};
+    vector<size_t> coinValues = {1, 2, 5};
     size_t coinsNum = coinValues.size();
     vector<vector<size_t>> dp(coinsNum + 1, vector<size_t>(sum + 1, 0));
     for (size_t i = 1; i <= sum; ++i) {
@@ -231,7 +229,7 @@ size_t coinsChange1(size_t sum) {
             if (j >= coinValues[i - 1]) {
                 minCoinsNum = dp[i][lastIdx] + 1;
             }
-            dp[i][j] = std::min(dp[i-1][j], minCoinsNum);
+            dp[i][j] = std::min(dp[i - 1][j], minCoinsNum);
         }
     }
 
@@ -255,17 +253,17 @@ size_t coinsChange1(size_t sum) {
  * total是要找零的钱数，只用两个一维数组，记录最小coins数目和所有的coins
  * https://blog.csdn.net/wdxin1322/article/details/9501163
  */
-size_t coinsChange2(size_t target){
-    vector<size_t> values ={1,2,5}; //硬币面值
+size_t coinsChange2(size_t target) {
+    vector<size_t> values = {1, 2, 5}; //硬币面值
     //vector<size_t> values ={1,2,5,21,25}; //硬币面值
     vector<size_t> coinsUsedNum(target + 1, 0); //保存每个面值对应最小值，因为0号位置舍弃，故加1
     vector<size_t> coinsTrack(target + 1, 0);
 
     coinsUsedNum[0] = 0;
     coinsTrack[0] = 0;
-    for(size_t i = 1; i<= target; ++i) {
+    for (size_t i = 1; i <= target; ++i) {
         size_t minCoinNum = UINT64_MAX;
-        size_t lastIn  = 0;
+        size_t lastIn = 0;
         for (size_t j = 0; j < values.size(); ++j) {
             if (i >= values[j]) {
                 if (coinsUsedNum[i - values[j]] + 1 < minCoinNum) {
@@ -284,7 +282,7 @@ size_t coinsChange2(size_t target){
     cout << "targetValue uses coins num: " << coinsUsedNum[target] << endl;
     size_t i = target;
     while (i > 0 && coinsTrack[i] != 0) {
-        cout<< coinsTrack[i]<<" ";
+        cout << coinsTrack[i] << " ";
         i -= coinsTrack[i];
     }
     return coinsUsedNum[target];
@@ -299,25 +297,25 @@ size_t coinsChange2(size_t target){
  */
 void package1() {
     const size_t kItemNum = 5;
-    size_t w[kItemNum] = {3,6,3,8,6}; //商品重量
-    size_t v[kItemNum] = {4,6,6,12,10}; //商品价值
+    size_t w[kItemNum] = {3, 6, 3, 8, 6}; //商品重量
+    size_t v[kItemNum] = {4, 6, 6, 12, 10}; //商品价值
     size_t C = 10; //背包容量
     //c[i][j]表示在商品1到i中，背包容量为j时，最大价值
     vector<vector<size_t>> c(kItemNum + 1, vector<size_t>(C + 1, 0));
 
     for (size_t i = 1; i <= kItemNum; ++i) {
-        for (size_t j = 1;j <= C; ++j) {
+        for (size_t j = 1; j <= C; ++j) {
             if (j < w[i - 1]) {
                 //背包容量小于商品i的重量，商品i一定不选
-                c[i][j] = c[i-1][j];
+                c[i][j] = c[i - 1][j];
             } else {
                 //比较选与不选商品i的背包总价值大小
-                c[i][j] = std::max(c[i-1][j], v[i - 1] + c[i-1][j - w[i - 1]]);
+                c[i][j] = std::max(c[i - 1][j], v[i - 1] + c[i - 1][j - w[i - 1]]);
             }
         }
     }
 
-    for(size_t i = 0; i <= kItemNum; ++i) {
+    for (size_t i = 0; i <= kItemNum; ++i) {
         for (size_t j = 0; j <= C; ++j) {
             cout << c[i][j] << " ";
         }
@@ -327,7 +325,7 @@ void package1() {
     size_t j = C;
     cout << "max value: " << c[i][j] << endl;
     while (i != 0) {
-        if ( c[i][j] == c[i-1][j] ) {
+        if (c[i][j] == c[i - 1][j]) {
             cout << "item" << i << " 0" << endl;
         } else {
             cout << "item" << i << " 1" << endl;
@@ -348,16 +346,16 @@ void shortestPath1() {
     vector<size_t> dist(kNodeNum, 0); //记录最短路径为多少
     vector<size_t> path(kNodeNum, 0); //记录最短路径
     size_t array[kNodeNum][kNodeNum] = {
-            {kMax,4,2,3,kMax,kMax,kMax,kMax,kMax,kMax},
-            {kMax,kMax,kMax,kMax,10,9,kMax,kMax,kMax,kMax},
-            {kMax,kMax,kMax,kMax,6,7,10,kMax,kMax,kMax},
-            {kMax,kMax,kMax,kMax,kMax,3,8,kMax,kMax,kMax},
-            {kMax,kMax,kMax,kMax,kMax,kMax,kMax,4,8,kMax},
-            {kMax,kMax,kMax,kMax,kMax,kMax,kMax,9,6,kMax},
-            {kMax,kMax,kMax,kMax,kMax,kMax,kMax,5,4,kMax},
-            {kMax,kMax,kMax,kMax,kMax,kMax,kMax,kMax,kMax,8},
-            {kMax,kMax,kMax,kMax,kMax,kMax,kMax,kMax,kMax,4},
-            {kMax,kMax,kMax,kMax,kMax,kMax,kMax,kMax,kMax,kMax}
+            {kMax, 4,    2,    3,    kMax, kMax, kMax, kMax, kMax, kMax},
+            {kMax, kMax, kMax, kMax, 10,   9,    kMax, kMax, kMax, kMax},
+            {kMax, kMax, kMax, kMax, 6,    7,    10,   kMax, kMax, kMax},
+            {kMax, kMax, kMax, kMax, kMax, 3,    8,    kMax, kMax, kMax},
+            {kMax, kMax, kMax, kMax, kMax, kMax, kMax, 4,    8,    kMax},
+            {kMax, kMax, kMax, kMax, kMax, kMax, kMax, 9,    6,    kMax},
+            {kMax, kMax, kMax, kMax, kMax, kMax, kMax, 5,    4,    kMax},
+            {kMax, kMax, kMax, kMax, kMax, kMax, kMax, kMax, kMax, 8},
+            {kMax, kMax, kMax, kMax, kMax, kMax, kMax, kMax, kMax, 4},
+            {kMax, kMax, kMax, kMax, kMax, kMax, kMax, kMax, kMax, kMax}
     };
 
     cout << "dist: \n";
@@ -376,7 +374,7 @@ void shortestPath1() {
     int idx = 0;
     path[idx++] = col + 1;
     while (col > 0) {
-        for (size_t row = col-1; row >= 0; --row) {
+        for (size_t row = col - 1; row >= 0; --row) {
             if ((array[row][col] != kMax) && (dist[row] == (dist[col] - array[row][col]))) {
                 col = row;
                 path[idx++] = col + 1;
@@ -442,7 +440,7 @@ void testPack() {
     packBackTrace(0);
     printf("maxValue：%d\n", maxValue);
     cout << "maxValue items: ";
-    for (size_t i = 0;i < kItemSize; ++i) {
+    for (size_t i = 0; i < kItemSize; ++i) {
         cout << maxValueItems[i] << " ";
     }
     cout << "\ncurWeight: " << curWeight << endl;

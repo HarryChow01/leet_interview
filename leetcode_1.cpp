@@ -13,13 +13,14 @@ using namespace std;
 
 struct ListNode {
     int val;
-    ListNode *next;
-    ListNode(int x) : val(x), next(NULL) {}
+    ListNode* next;
+
+    ListNode(int x) : val(x), next(nullptr) {}
 };
 
 template<typename T>
-ostream& operator<<(ostream& out, vector<T>& data) {
-    for (auto& item : data) {
+ostream &operator<<(ostream &out, vector<T> &data) {
+    for (auto &item : data) {
         out << " " << item;
     }
     out << endl;
@@ -27,15 +28,15 @@ ostream& operator<<(ostream& out, vector<T>& data) {
 }
 
 template<typename T>
-ostream& operator<<(ostream& out, list<T>& data) {
-    for (auto& item : data) {
+ostream &operator<<(ostream &out, list<T> &data) {
+    for (auto &item : data) {
         out << " " << item;
     }
     out << endl;
     return out;
 }
 
-vector<int> twoSum(vector<int>& nums, int target) {
+vector<int> twoSum(vector<int> &nums, int target) {
     map<int, int> myMap;
     vector<int> result;
     for (int i = 0; i < nums.size(); ++i) {
@@ -60,7 +61,7 @@ void testTwoSum() {
 // 用int64_t类型记录，然后看看是不是大于int32_t的最大是否小于int32_t的最小。
 int32_t reverseInt(int32_t x) {
     int64_t result = 0;
-    int64_t curNum = std::abs((int64_t)x);
+    int64_t curNum = std::abs((int64_t) x);
     while (curNum > 0) {
         result = result * 10 + curNum % 10;
         curNum /= 10;
@@ -70,7 +71,7 @@ int32_t reverseInt(int32_t x) {
     if (result > INT32_MAX || result < INT32_MIN) {
         return 0;
     } else {
-        return (int32_t)result;
+        return (int32_t) result;
     }
 }
 
@@ -99,7 +100,7 @@ int myAtoi(string str) {
         // 溢出
         if (negative && sum > int64_t(INT32_MAX) + 1) {
             return INT32_MIN;
-        } else  if (!negative && sum > INT32_MAX) {
+        } else if (!negative && sum > INT32_MAX) {
             return INT32_MAX;
         }
     }
@@ -119,9 +120,9 @@ int myAtoi(string str) {
     return negative ? int(-sum) : int(sum);
 }
 
-ListNode* addTwoNumbers(ListNode *l1, ListNode *l2) {
-    ListNode *res = new ListNode(-1);
-    ListNode *cur = res;
+ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+    ListNode* res = new ListNode(-1);
+    ListNode* cur = res;
     int carry = 0;
     while (l1 || l2) {
         int n1 = l1 ? l1->val : 0;
@@ -138,19 +139,19 @@ ListNode* addTwoNumbers(ListNode *l1, ListNode *l2) {
 }
 
 
-bool isParenthesesValid(const string& s) {
+bool isParenthesesValid(const string &s) {
     if (s.empty() || s.size() % 2 == 1) {
         return false;
     }
     map<char, char> myMap = {
-        {'(', ')'},
-        {'[', ']'},
-        {'{', '}'},
+            {'(', ')'},
+            {'[', ']'},
+            {'{', '}'},
     };
 
     //bool contain = myMap['a'] == 'b';
     //cout << contain << endl;
-    set<char> mySet = {')',']','}'};
+    set<char> mySet = {')', ']', '}'};
     stack<char> stack;
     for (auto ch : s) {
         if (myMap.count(ch) >= 1) {
@@ -169,7 +170,7 @@ bool isParenthesesValid(const string& s) {
     return stack.empty();
 }
 
-vector<vector<int>> threeSum1(vector<int>& nums) {
+vector<vector<int>> threeSum1(vector<int> &nums) {
     vector<vector<int>> res;
     sort(nums.begin(), nums.end());
     if (nums.empty() || nums.back() < 0 || nums.front() > 0) return {};
@@ -183,7 +184,8 @@ vector<vector<int>> threeSum1(vector<int>& nums) {
                 res.push_back({nums[k], nums[i], nums[j]});
                 while (i < j && nums[i] == nums[i + 1]) ++i;
                 while (i < j && nums[j] == nums[j - 1]) --j;
-                ++i; --j;
+                ++i;
+                --j;
             } else if (nums[i] + nums[j] < target) ++i;
             else --j;
         }
@@ -191,7 +193,7 @@ vector<vector<int>> threeSum1(vector<int>& nums) {
     return res;
 }
 
-vector<vector<int>> threeSum2(vector<int>& nums) {
+vector<vector<int>> threeSum2(vector<int> &nums) {
     set<vector<int>> res;
     sort(nums.begin(), nums.end());
     if (nums.empty() || nums.back() < 0 || nums.front() > 0) return {};
@@ -204,22 +206,25 @@ vector<vector<int>> threeSum2(vector<int>& nums) {
                 res.insert({nums[k], nums[i], nums[j]});
                 while (i < j && nums[i] == nums[i + 1]) ++i;
                 while (i < j && nums[j] == nums[j - 1]) --j;
-                ++i; --j;
+                ++i;
+                --j;
             } else if (nums[i] + nums[j] < target) ++i;
             else --j;
         }
     }
     return vector<vector<int>>(res.begin(), res.end());
 }
+
 void test3sum() {
     vector<int> data = {-1, 0, 1, 2, -1, -4};
     auto result = threeSum2(data);
-    for (auto& item : result) {
+    for (auto &item : result) {
         cout << item;
     }
 
 }
-int threeSumClosest(vector<int>& nums, int target) {
+
+int threeSumClosest(vector<int> &nums, int target) {
     int closest = nums[0] + nums[1] + nums[2];
     int diff = abs(closest - target);
     sort(nums.begin(), nums.end());
@@ -238,12 +243,14 @@ int threeSumClosest(vector<int>& nums, int target) {
     }
     return closest;
 }
+
 void test3SumClosest() {
-    vector<int> data = {-1,2,1,-4};
+    vector<int> data = {-1, 2, 1, -4};
     auto result = threeSumClosest(data, 1);
     cout << "test3SumClosest: " << result << endl;
 
 }
+
 vector<vector<int>> fourSum(vector<int> &nums, int target) {
     set<vector<int>> res;
     sort(nums.begin(), nums.end());
@@ -256,7 +263,8 @@ vector<vector<int>> fourSum(vector<int> &nums, int target) {
                 if (sum == target) {
                     vector<int> out{nums[i], nums[j], nums[left], nums[right]};
                     res.insert(out);
-                    ++left; --right;
+                    ++left;
+                    --right;
                 } else if (sum < target) ++left;
                 else --right;
             }
@@ -297,7 +305,7 @@ void testLongestSubstr() {
 
 }
 
-int findKth2Array(vector<int>& nums1, int i, vector<int>& nums2, int j, int k) {
+int findKth2Array(vector<int> &nums1, int i, vector<int> &nums2, int j, int k) {
     if (i >= nums1.size()) return nums2[j + k - 1];
     if (j >= nums2.size()) return nums1[i + k - 1];
     if (k == 1) return min(nums1[i], nums2[j]);
@@ -309,10 +317,12 @@ int findKth2Array(vector<int>& nums1, int i, vector<int>& nums2, int j, int k) {
         return findKth2Array(nums1, i, nums2, j + k / 2, k - k / 2);
     }
 }
-double findMedian2Arrays(vector<int>& nums1, vector<int>& nums2) {
+
+double findMedian2Arrays(vector<int> &nums1, vector<int> &nums2) {
     int m = nums1.size(), n = nums2.size(), left = (m + n + 1) / 2, right = (m + n + 2) / 2;
     return (findKth2Array(nums1, 0, nums2, 0, left) + findKth2Array(nums1, 0, nums2, 0, right)) / 2.0;
 }
+
 void testMedian() {
     vector<int> nums1 = {1, 3};
     vector<int> nums2 = {2, 4};
@@ -321,7 +331,7 @@ void testMedian() {
 
 ListNode* removeNthFromEnd(ListNode* head, size_t n) {
     if (!head || !head->next || n == 0) return nullptr;
-    ListNode *pre = head, *cur = head;
+    ListNode* pre = head, * cur = head;
     for (size_t i = 0; i < n && cur != nullptr; ++i) cur = cur->next;
     if (!cur) return head->next;
     while (cur->next) {
@@ -333,7 +343,7 @@ ListNode* removeNthFromEnd(ListNode* head, size_t n) {
 }
 
 ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
-    ListNode *dummy = new ListNode(-1), *cur = dummy;
+    ListNode* dummy = new ListNode(-1), * cur = dummy;
     while (l1 && l2) {
         if (l1->val < l2->val) {
             cur->next = l1;
@@ -348,15 +358,17 @@ ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
     return dummy->next;
 }
 
-void searchPalindrome(string s, int left, int right, int& start, int& maxLen) {
+void searchPalindrome(string s, int left, int right, int &start, int &maxLen) {
     while (left >= 0 && right < s.size() && s[left] == s[right]) {
-        --left; ++right;
+        --left;
+        ++right;
     }
     if (maxLen < right - left - 1) {
         start = left + 1;
         maxLen = right - left - 1;
     }
 }
+
 string longestPalindrome1(string s) {
     if (s.size() < 2) return s;
     int n = s.size(), maxLen = 0, start = 0;
@@ -366,6 +378,7 @@ string longestPalindrome1(string s) {
     }
     return s.substr(start, maxLen);
 }
+
 string longestPalindrome2(string s) {
     if (s.size() < 2) return s;
     int n = s.size(), maxLen = 0, start = 0;
@@ -375,7 +388,8 @@ string longestPalindrome2(string s) {
         while (right < n - 1 && s[right + 1] == s[right]) ++right;
         i = right + 1;
         while (right < n - 1 && left > 0 && s[right + 1] == s[left - 1]) {
-            ++right; --left;
+            ++right;
+            --left;
         }
         if (maxLen < right - left + 1) {
             maxLen = right - left + 1;
@@ -384,6 +398,7 @@ string longestPalindrome2(string s) {
     }
     return s.substr(start, maxLen);
 }
+
 void testLongestPalindrome() {
     string s("aaalevelbbb");
     cout << "palindrome: " << longestPalindrome2(s) << endl;
@@ -403,6 +418,7 @@ string zigZagConvert(string s, int nRows) {
     }
     return res;
 }
+
 void testZigZagConvert() {
     string str("0123456789ABCDEF");
     cout << "zigzag string: " << zigZagConvert(str, 4) << endl;
@@ -439,7 +455,7 @@ bool isReMatch(string s, string p) {
 }
 
 // 容器装最多水，图示：https://zhuanlan.zhihu.com/p/29776216
-int maxContain(vector<int>& height) {
+int maxContain(vector<int> &height) {
     int res = 0, i = 0, j = height.size() - 1;
     while (i < j) {
         res = max(res, min(height[i], height[j]) * (j - i));
@@ -447,8 +463,9 @@ int maxContain(vector<int>& height) {
     }
     return res;
 }
+
 void testMaxContain() {
-    vector<int> heights = {1,8,6,2,5,4,8,3,7};
+    vector<int> heights = {1, 8, 6, 2, 5, 4, 8, 3, 7};
     cout << "maxWater: " << maxContain(heights) << endl;
 }
 
@@ -465,8 +482,7 @@ string intToRoman(int num) {
         else if (x > 4 && x < 9) {
             res += roman[n - 1];
             for (int i = 6; i <= x; ++i) res += roman[n];
-        }
-        else if (x == 9) res += roman[n] + roman[n - 2];
+        } else if (x == 9) res += roman[n] + roman[n - 2];
         num %= value[n];
     }
     return res;
@@ -474,16 +490,22 @@ string intToRoman(int num) {
 
 int romanToInt(string s) {
     int res = 0;
-    unordered_map<char, int> m{{'I', 1}, {'V', 5}, {'X', 10}, {'L', 50}, {'C', 100}, {'D', 500}, {'M', 1000}};
+    unordered_map<char, int> m{{'I', 1},
+                               {'V', 5},
+                               {'X', 10},
+                               {'L', 50},
+                               {'C', 100},
+                               {'D', 500},
+                               {'M', 1000}};
     for (int i = 0; i < s.size(); ++i) {
         int val = m[s[i]];
-        if (i == s.size() - 1 || m[s[i+1]] <= m[s[i]]) res += val;
+        if (i == s.size() - 1 || m[s[i + 1]] <= m[s[i]]) res += val;
         else res -= val;
     }
     return res;
 }
 
-string longestCommonPrefix(vector<string>& strs) {
+string longestCommonPrefix(vector<string> &strs) {
     if (strs.empty()) return "";
     string res = "";
     for (int j = 0; j < strs[0].size(); ++j) {
@@ -497,18 +519,23 @@ string longestCommonPrefix(vector<string>& strs) {
     }
     return res;
 }
+
 void testLongestCommonPrefix() {
-    vector<string> strs = {"flower","flow","flight"};
+    vector<string> strs = {"flower", "flow", "flight"};
     cout << "longestCommonPrefix: " << longestCommonPrefix(strs) << endl;
 }
 
 void letterCombinationsDFS(string digits, string dict[], int level, string out, vector<string> &res) {
-    if (level == digits.size()) {res.push_back(out); return;}
+    if (level == digits.size()) {
+        res.push_back(out);
+        return;
+    }
     string str = dict[digits[level] - '0'];
     for (int i = 0; i < str.size(); ++i) {
         letterCombinationsDFS(digits, dict, level + 1, out + string(1, str[i]), res);
     }
 }
+
 vector<string> letterCombinations1(string digits) {
     if (digits.empty()) return {};
     vector<string> res{""}; // 不能是空
@@ -523,9 +550,10 @@ vector<string> letterCombinations1(string digits) {
     }
     return res;
 }
+
 vector<string> letterCombinations2(string digits) {
     if (digits.empty()) return {};
-    for (auto& ch : digits) {   // digits能有0或1，因为是空
+    for (auto &ch : digits) {   // digits能有0或1，因为是空
         if (ch < '2') {
             return {};
         }
@@ -535,11 +563,12 @@ vector<string> letterCombinations2(string digits) {
     letterCombinationsDFS(digits, dict, 0, "", res);
     return res;
 }
+
 void testLetterCombinations() {
     string digits("356");
     auto strs = letterCombinations1(digits);
     cout << "strs: ";
-    for (auto& str : strs) {
+    for (auto &str : strs) {
         cout << " " << str;
     }
     cout << endl;
@@ -553,13 +582,14 @@ void generateParenthesisDFS(int left, int right, string out, vector<string> &res
         if (right > 0) generateParenthesisDFS(left, right - 1, out + ')', res);
     }
 }
+
 vector<string> generateParenthesis(int n) {
     vector<string> res;
     generateParenthesisDFS(n, n, "", res);
     return res;
 }
 
-ListNode *mergeKLists(vector<ListNode *> &lists) {
+ListNode* mergeKLists(vector<ListNode*> &lists) {
     if (lists.size() == 0) return NULL;
     int n = lists.size();
     while (n > 1) {
@@ -573,10 +603,10 @@ ListNode *mergeKLists(vector<ListNode *> &lists) {
 }
 
 ListNode* swapPairs(ListNode* head) {
-    ListNode *dummy = new ListNode(-1), *pre = dummy;
+    ListNode* dummy = new ListNode(-1), * pre = dummy;
     dummy->next = head;
     while (pre->next && pre->next->next) {
-        ListNode *t = pre->next->next;
+        ListNode* t = pre->next->next;
         pre->next->next = t->next;
         t->next = pre->next;
         pre->next = t;
@@ -603,7 +633,6 @@ int main() {
     //testLongestCommonPrefix();
     //test3SumClosest();
     testLetterCombinations();
-
 
 
     return 0;

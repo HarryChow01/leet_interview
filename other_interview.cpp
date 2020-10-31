@@ -24,6 +24,7 @@ using namespace std;
 // F(1)=1，F(2)=1, F(n)=F(n-1)+F(n-2)
 const int32_t kSize = 1024;
 int fibTable[kSize] = {};
+
 // 循环法，O(n)
 int32_t fib1(const int32_t n) {
     if (n == 0) return 0;
@@ -37,6 +38,7 @@ int32_t fib1(const int32_t n) {
     }
     return b;
 }
+
 // 查表法
 int32_t fib2(const int32_t n) {
     if (n == 0) return 0;
@@ -72,21 +74,24 @@ void count_0_1() {
     }
     cout << "count1: " << count1 << endl;
 }
+
 void DeleteSpace(char* str);
+
 void TestDeleteSpace();
+
 void DeleteSpace(char* src) {
     const int len = strlen(src);
     int i = 0;
-    if(!src)
+    if (!src)
         return;
 
-    while(i < len && src[i]!= ' ') {
+    while (i < len && src[i] != ' ') {
         i++;
     }
     int j = i;
 
-    while(i < len) {
-        if(src[i]!= ' ') {
+    while (i < len) {
+        if (src[i] != ' ') {
             src[j++] = src[i];
         }
         i++;
@@ -96,35 +101,29 @@ void DeleteSpace(char* src) {
 
 void TestDeleteSpace() {
     char src[] = "a b c d ";
-    printf("%d\n",strlen(src));
+    printf("%d\n", strlen(src));
     DeleteSpace(src);
-    printf("%d\n",strlen(src));
-    printf("%s\n",src);
+    printf("%d\n", strlen(src));
+    printf("%s\n", src);
 }
 
 
-void * memcpy(void *dest, const void *src, size_t count)
-{
+void* memcpy(void* dest, const void* src, size_t count) {
     if (dest == NULL || src == NULL)
-          return NULL;
-    char *pdest = static_cast <char*>(dest);
-    const char *psrc  = static_cast <const char*>(src);
-    
-    if (pdest > psrc && pdest < psrc + count)
-    {
-        for (size_t i = count -1; i != -1; --i)
-        {
-                pdest[i] = psrc[i];
+        return NULL;
+    char* pdest = static_cast <char*>(dest);
+    const char* psrc = static_cast <const char*>(src);
+
+    if (pdest > psrc && pdest < psrc + count) {
+        for (size_t i = count - 1; i != -1; --i) {
+            pdest[i] = psrc[i];
+        }
+    } else {
+        for (size_t i = 0; i < count; i++) {
+            pdest[i] = psrc[i];
         }
     }
-    else
-    {
-        for (size_t i= 0; i < count; i++)
-        {
-                pdest[i] = psrc[i];
-        }
-    }
-    
+
     return dest;
 }
 
@@ -140,18 +139,14 @@ int main()
 
 #endif
 
-char * DelSpace(char * data)
-{
-    if (!data || *data == '\0')
-    {
+char* DelSpace(char* data) {
+    if (!data || *data == '\0') {
         return nullptr;
     }
-    char *p = data;
-    char *q = data;
-    while(*q != '\0')
-    {
-        if (*q != ' ')
-        {
+    char* p = data;
+    char* q = data;
+    while (*q != '\0') {
+        if (*q != ' ') {
             *p++ = *q;
         }
         q++;
@@ -171,7 +166,7 @@ int main()
 #endif
 
 //不使用加减乘除实现两个数相加
-int add(int a, int b){
+int add(int a, int b) {
     if (b == 0) return a;
     else
         return add(a ^ b, (a & b) << 1);
