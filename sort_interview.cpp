@@ -58,7 +58,7 @@ void testBisearch() {
 
 template<typename T>
 int partition(T data[], int start, int end) {
-    assert ((start >= 0) && (start < end));
+    assert ((start >= 0) && (start <= end));
     T pivot = data[start];
     while (start < end) {
         while ((start < end) && (data[end] >= pivot)) --end;
@@ -144,7 +144,7 @@ void heapAdjust(T data[], int s, int m) {
 }
 
 template<typename T>
-void heapSort(std::vector<T> data) {
+void heapSort(std::vector<T>& data) {
     int length = data.size();
     if (length <= 1) return;
     for (int i = length / 2; i >= 0; --i) {
@@ -409,7 +409,7 @@ ListNode* createListSort() {
 }
 
 int main() {
-    testBisearch();
+    //testBisearch();
     //testQuickSort();
     testHeapSort();
     //testMergeSort();

@@ -58,13 +58,12 @@ char* delSubStr(char* str, const char* subStr) {
         }
         if (!subStr[pos]) {
             start += pos;
-            pos = 0;
         } else {
             str[prev++] = *start++;
-            pos = 0;
         }
+        pos = 0;
     }
-    str[prev++] = '\0';
+    str[prev] = '\0';
 
     return str;
 }
