@@ -64,6 +64,7 @@ void deleteList(ListNode* head) {
         head = head->next;
         delete (p);
     }
+    p = nullptr;
 }
 
 // 倒序打印链表
@@ -110,12 +111,12 @@ ListNode* reverseListByNStep(ListNode* head, const size_t kStep) {
     if (!head || kStep < 1) {
         return head;
     }
-    auto* dump = new ListNode(-1);
-    dump->next = head;
+    auto* dumb = new ListNode(-1);
+    dumb->next = head;
     size_t len = 0;
-    auto* prev = dump;
+    auto* prev = dumb;
     ListNode* partHead = nullptr;
-    auto* tail = dump;
+    auto* tail = dumb;
 
     while (head) {
         if (0 == len) {
@@ -135,19 +136,125 @@ ListNode* reverseListByNStep(ListNode* head, const size_t kStep) {
             len = 0;
         }
     }
-    auto* pHead = dump->next;
-    delete dump;
+    auto* pHead = dumb->next;
+    delete dumb;
     return pHead;
 }
 
+// 单链表首尾交替相连（快手面试题）
+ListNode* reOrderList(ListNode* head) {
+    if (!head || !head->next) {
+        return head;
+    }
+    // 快慢指针将链表分成前后两个部分，后一部分进行逆序；
+    auto* pSlow = head;
+    auto* pFast = head->next;
+    while (pFast && pFast->next) {
+        pFast = pFast->next->next;
+        pSlow = pSlow->next;
+    }
+
+    pFast = pSlow->next;
+    pSlow->next = nullptr;
+    pSlow = head;
+    pFast = reverseList(pFast);
+
+    ListNode* p = nullptr;
+    while (pFast) {
+        p = pFast;
+        pFast = pFast->next;
+        p->next = pSlow->next;
+        pSlow->next = p;
+        pSlow = pSlow->next->next;
+    }
+    return head;
+}
+
+
+/*
+ * 单链表分段倒置:
+任何一个单链表都可以分成若干个单调递增的区间, 例如:
+1->4->6->2->8->6 可以分成 [1, 4, 6], [2, 8] 和[6] 三个区间.
+现在要求对每个区间进行倒置, 例如刚才的例子就变成:
+6->4->1->8->2->6.
+要求返回链表的头指针, 语言不限.
+ */
+ListNode* reverseSeg(ListNode* head) {
+    if (!head || !head->next) {
+        return head;
+    }
+    ListNode* newHead = new ListNode(-1);
+    ListNode* newTail = newHead;
+
+    ListNode* next = nullptr;
+
+    ListNode* segHead = nullptr;
+    ListNode* segTail = nullptr;
+
+    while (head) {
+        segTail = head;
+        segHead = nullptr;
+        next = head->next;
+        while (next && head->val <= next->val) {
+            head->next = segHead;
+            segHead = head;
+            head = next;
+            next = head->next;
+        }
+
+        head->next = segHead;
+        segHead = head;
+        newTail->next = segHead;
+        newTail = segTail;
+        head = next;
+    }
+
+    auto* pHead = newHead->next;
+    delete newHead;
+    return pHead;
+}
+
+ListNode* createSegList() {
+    auto* head = new ListNode(1);
+    ListNode* help = head;
+    help->next = new ListNode(4);
+    help = help->next;
+    help->next = new ListNode(6);
+    help = help->next;
+    help->next = new ListNode(2);
+    help = help->next;
+    help->next = new ListNode(8);
+    help = help->next;
+    help->next = new ListNode(6);
+
+    return head;
+}
+
 void testReverseList() {
-    ListNode* head = createList(8);
+    ListNode* head = createList(7);
     printList(head);
-    head = reverseListByNStep(head, 4);
+    //head = reverseList(head);
+    head = reverseListByNStep(head, 3);
+    //head = reOrderList(head);
     printList(head);
+
+    //head = createSegList();
+    //printList(head);
+    //head = reverseSeg(head);
+    //printList(head);
 
     deleteList(head);
 }
+
+#if 1
+int main() {
+    printf("Into main\n\n");
+
+    testReverseList();
+
+    printf("\n\nreturn from main\n");
+}
+#endif
 
 ListNode* getLastKListNode(ListNode* head, const size_t k) {
     if (!head || k < 1)
@@ -554,6 +661,7 @@ ListNode* createListSort() {
     return head;
 }
 
+#if 0
 int main(int argc, char* argv[]) {
     printf("Into main\n\n");
 
@@ -579,7 +687,7 @@ int main(int argc, char* argv[]) {
     printf("\n\nreturn from main\n");
 }
 
-
+#endif
 
 
 

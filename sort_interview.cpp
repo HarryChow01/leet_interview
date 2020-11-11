@@ -167,31 +167,6 @@ void testHeapSort() {
     printContainer(data);
 }
 
-
-// 归并算法
-template<typename T>
-void merge(T source[], T dest[], int i, int m, int n) {
-    int k = i;
-    int j = m + 1;
-    for (; i <= m && j <= n; ++k) {
-        if (source[i] <= source[j]) dest[k++] = source[i++];
-        else dest[k++] = source[j++];
-    }
-    while (i <= m) dest[k++] = source[i++];
-    while (j <= n) dest[k++] = source[j++];
-}
-
-template<typename T>
-void mergeSort(T data[], int start, int end) {
-    if (start >= end) return;
-    std::vector<T> temp(end - start + 1);
-    std::copy(temp, data + start, data + end + 1);
-    int mid = (start + end) / 2;
-    mergeSort(temp, start, mid);
-    mergeSort(temp, mid + 1, end);
-    merge(temp.data, data, start, mid, end);
-}
-
 // 桶排序重要参考：https://blog.csdn.net/misayaaaaa/article/details/66969486
 // 适用范围是：待排序数组是整数，且值在一个范围内[m, n]
 // 时间复杂度：O(n)，空间复杂度要一个额外数组
@@ -265,7 +240,7 @@ int median2(vector<int> &data) {
         if (kPos == 1) {
             temp += data[1];
         } else {
-            temp += data[1] >= data[2] ? data[1] : data[2];
+            temp += std::max(data[1], data[2]);
         }
         return temp / 2;
     }
@@ -391,19 +366,18 @@ ListNode* listMergeSort(ListNode* head) {
 
 ListNode* createListSort() {
     auto* head = new ListNode(4);
-    ListNode* help = head;
-    help->next = new ListNode(1);
-    help = help->next;
-    help->next = new ListNode(6);
-    help = help->next;
-    help->next = new ListNode(2);
-    help = help->next;
-    help->next = new ListNode(3);
-    help = help->next;
-    help->next = new ListNode(7);
-    help = help->next;
-    help->next = new ListNode(5);
-    help = help->next;
+    ListNode* cur = head;
+    cur->next = new ListNode(1);
+    cur = cur->next;
+    cur->next = new ListNode(6);
+    cur = cur->next;
+    cur->next = new ListNode(2);
+    cur = cur->next;
+    cur->next = new ListNode(3);
+    cur = cur->next;
+    cur->next = new ListNode(7);
+    cur = cur->next;
+    cur->next = new ListNode(5);
 
     return head;
 }
@@ -411,8 +385,8 @@ ListNode* createListSort() {
 int main() {
     //testBisearch();
     //testQuickSort();
-    testHeapSort();
-    //testMergeSort();
+    //testHeapSort();
+    testMergeSort();
 
     return 0;
 }
