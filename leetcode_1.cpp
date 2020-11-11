@@ -1,4 +1,5 @@
 
+#include <cassert>
 #include <string>
 #include <vector>
 #include <list>
@@ -452,6 +453,7 @@ bool isReMatch(string s, string p) {
         if (isReMatch(s, p.substr(2))) return true;
         s = s.substr(1);
     }
+    return true;
 }
 
 // 容器装最多水，图示：https://zhuanlan.zhihu.com/p/29776216
@@ -615,7 +617,88 @@ ListNode* swapPairs(ListNode* head) {
     return dummy->next;
 }
 
+// A:10, B:20, C:5    #input1
+// A->B, C->B         #input2
+// 30                 #output
+// 给予一个任务序列，和它们的持续时间，以及任务之间的依赖关系，求所有任务执行完毕的最短时间
+int getDuration(const string& job, std::map<string, int> job2Time, const map<string, list<string>>& job2JobList) {
 
+    int curTime = job2Time[job];
+    auto it = job2JobList.find(job);
+    int maxTime = curTime;
+    if (it != job2JobList.end()) {
+        auto jobList = it->second;
+        for (const auto& job1 : jobList) {
+            maxTime = std::max(maxTime, curTime + getDuration(job1, job2Time, job2JobList));
+        }
+    }
+    return maxTime;
+}
+
+int getAllDuration(const map<string, int>& job2Time, const map<string, list<string>>& job2JobList) {
+    int maxTime = INT32_MIN;
+    for (const auto& item : job2Time) {
+        string job = item.first;
+        maxTime = std::max(maxTime, getDuration(job, job2Time, job2JobList));
+    }
+    return maxTime;
+}
+
+// 自然数分解使得积最大
+// given the input integer n (n > 1), write a function to return
+// the max product of elements (element > 0) whose sum is n
+// e.g.
+//        n = 2, 1 + 1, max product is 1 * 1 = 1
+//        n = 6, 1 + 2 + 3, 2 + 4, max product is 3 * 3= 9
+//        n = 10, 1 + 9,  1 + 1 + 8,  max product is 2 * 2 * 3 * 3 = 36
+int product(const int n) {
+    assert(n > 0);
+    if (n == 1) {
+        return 1;
+    }
+
+    std::vector<int> record(n + 1);
+    int maxProduct = 1;
+
+    for (int i = 1; i < n; i++) {
+        int leftMax = 1;
+        if (record[i] > 0) {
+            leftMax = record[i];
+        } else {
+            leftMax = product(i);
+            record[i] = leftMax;
+        }
+        int maxLeftProduct = std::max(leftMax, i);
+
+        int rightMax = 1;
+        if (record[n - i] > 0) {
+            rightMax = record[n - i];
+        } else {
+            rightMax = product(n - i);
+            record[n - i] = rightMax;
+        }
+        int maxRightProduct = std::max(n - i, rightMax);
+
+        int curMax = maxLeftProduct * maxRightProduct;
+        if (curMax > maxProduct) {
+            maxProduct = curMax;
+        }
+    }
+
+    return maxProduct;
+}
+
+#if 1
+int main() {
+    for (int i = 2; i <= 10; i++) {
+        int maxProduct = product(i);
+        cout << i << " " << maxProduct << endl;
+    }
+}
+#endif
+
+
+#if 0
 int main() {
     //testTwoSum();
     //cout << reverseInt(-123) <<endl;
@@ -637,4 +720,4 @@ int main() {
 
     return 0;
 }
-
+#endif

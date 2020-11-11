@@ -112,29 +112,25 @@ ListNode* reverseListByNStep(ListNode* head, const size_t kStep) {
         return head;
     }
     auto* dumb = new ListNode(-1);
-    dumb->next = head;
+
+    ListNode* segHead;
+    ListNode* segTail;
+    ListNode* newTail = dumb;
     size_t len = 0;
-    auto* prev = dumb;
-    ListNode* partHead = nullptr;
-    auto* tail = dumb;
 
     while (head) {
-        if (0 == len) {
-            partHead = head;
-        }
+        segTail = head;
+        segHead = nullptr;
         while (head && len < kStep) {
+            auto* cur = head;
             head = head->next;
-            prev = prev->next;
+            cur->next = segHead;
+            segHead = cur;
             ++len;
         }
-        if (kStep == len) {
-            prev->next = nullptr;
-            tail->next = reverseList(partHead);
-            tail = partHead;
-            tail->next = head;
-            prev = tail;
-            len = 0;
-        }
+        newTail->next = segHead;
+        newTail = segTail;
+        len = 0;
     }
     auto* pHead = dumb->next;
     delete dumb;
@@ -183,10 +179,8 @@ ListNode* reverseSeg(ListNode* head) {
     if (!head || !head->next) {
         return head;
     }
-    ListNode* newHead = new ListNode(-1);
-    ListNode* newTail = newHead;
-
-    ListNode* next = nullptr;
+    ListNode* dumb = new ListNode(-1);
+    ListNode* newTail = dumb;
 
     ListNode* segHead = nullptr;
     ListNode* segTail = nullptr;
@@ -194,7 +188,7 @@ ListNode* reverseSeg(ListNode* head) {
     while (head) {
         segTail = head;
         segHead = nullptr;
-        next = head->next;
+        auto* next = head->next;
         while (next && head->val <= next->val) {
             head->next = segHead;
             segHead = head;
@@ -209,8 +203,8 @@ ListNode* reverseSeg(ListNode* head) {
         head = next;
     }
 
-    auto* pHead = newHead->next;
-    delete newHead;
+    auto* pHead = dumb->next;
+    delete dumb;
     return pHead;
 }
 
@@ -231,27 +225,25 @@ ListNode* createSegList() {
 }
 
 void testReverseList() {
-    ListNode* head = createList(7);
-    printList(head);
+    //ListNode* head = createList(7);
+    //printList(head);
     //head = reverseList(head);
-    head = reverseListByNStep(head, 3);
+    //head = reverseListByNStep(head, 3);
     //head = reOrderList(head);
-    printList(head);
+    //printList(head);
 
-    //head = createSegList();
-    //printList(head);
-    //head = reverseSeg(head);
-    //printList(head);
+    ListNode* head = createSegList();
+    printList(head);
+    head = reverseSeg(head);
+    printList(head);
 
     deleteList(head);
 }
 
-#if 1
+#if 0
 int main() {
     printf("Into main\n\n");
-
     testReverseList();
-
     printf("\n\nreturn from main\n");
 }
 #endif
@@ -300,6 +292,53 @@ void testGetLastKListNode() {
 
     deleteList(head);
 }
+
+ListNode* delLastKListNode(ListNode* head, const size_t k) {
+    if (!head || k < 1) {
+        return head;
+    }
+    auto* pFast = head;
+    size_t count = 0;
+    while (pFast && count < k) {
+        pFast = pFast->next;
+        count++;
+    }
+    if (count < k) {
+        return head;
+    }
+    if (!pFast) {
+        auto* q = head;
+        head = head->next;
+        delete q;
+        return head;
+    }
+    pFast = pFast->next;
+    auto* pSlow = head;
+    while (pFast) {
+        pFast = pFast->next;
+        pSlow = pSlow->next;
+    }
+    auto* p = pSlow->next;
+    pSlow->next = p->next;
+    delete p;
+    return head;
+}
+
+void testDelNode() {
+    ListNode* head = createList(8);
+    printList(head);
+    head = delLastKListNode(head, 4);
+    printList(head);
+    deleteList(head);
+}
+
+#if 1
+int main() {
+    printf("Into main\n\n");
+    testDelNode();
+    printf("\n\nreturn from main\n");
+}
+#endif
 
 ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
     ListNode* dumb = new ListNode(-1);
