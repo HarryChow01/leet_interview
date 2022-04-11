@@ -424,18 +424,18 @@ RandomListNode* randomListClone1(RandomListNode* pHead) {
     return ret;
 }
 
-RandomListNode* copyList(RandomListNode* pHead, map<RandomListNode*, RandomListNode*> &mp) {
+RandomListNode* copyRandomList(RandomListNode* pHead, map<RandomListNode*, RandomListNode*> &mp) {
     if (!pHead)
         return nullptr;
     auto* ret = new RandomListNode(pHead->label);
     mp[pHead] = ret;
-    ret->next = copyList(pHead->next, mp);
+    ret->next = copyRandomList(pHead->next, mp);
     return ret;
 }
 
 RandomListNode* randomListClone2(RandomListNode* pHead) {
     map<RandomListNode*, RandomListNode*> mp;
-    auto* ret = copyList(pHead, mp);
+    auto* ret = copyRandomList(pHead, mp);
     for (RandomListNode* p = pHead, * q = ret; p != nullptr; p = p->next, q = q->next)
         q->random = mp[p->random];
     return ret;
@@ -494,6 +494,24 @@ unsigned int getListLength(ListNode* pHead) {
     return length;
 }
 
+// 判断是否有环
+bool hasCycle(ListNode* head) {
+    if (!head || !head->next) {
+        return false;
+    }
+    ListNode* slow = head;
+    ListNode* fast = head->next;
+    while (fast && (fast != slow)) {
+        slow = slow->next;
+        fast = fast->next;
+        if (!fast || (fast == slow)) {
+            break;
+        }
+        fast = fast->next;
+    }
+    return fast == slow;
+}
+
 // 获取两个链表的第一个公共节点
 ListNode* FindFirstCommonNode(ListNode* pHead1, ListNode* pHead2) {
     // 如果有一个链表为空，则返回结果为空
@@ -532,15 +550,12 @@ ListNode* meetingNode(ListNode* pHead) {
     }
     ListNode* pSlow = pHead->next;
     ListNode* pFast = pSlow->next;
-    while (pFast != nullptr && pSlow != nullptr) {
+    while (pFast && pSlow && pFast->next) {
         if (pFast == pSlow) {
             return pFast;
         }
         pSlow = pSlow->next;
-        pFast = pFast->next;
-        if (pFast != nullptr) {
-            pFast = pFast->next;
-        }
+        pFast = pFast->next->next;
     }
     return nullptr;
 }

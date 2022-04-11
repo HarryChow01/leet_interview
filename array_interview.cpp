@@ -22,28 +22,53 @@ inline void printIntArray(vector<int> &array) {
 }
 
 // 二维行列递增数组中的查找
-class Solution1 {
-public:
-    bool findIn2DArray(int target, vector<vector<int>> &array) {
-        size_t rows = array.size();
-        size_t cols = array[0].size();
-        if (array.empty() || rows == 0 || cols == 0) {
-            return false;
+pair<int, int> findIn2DArray1(const int target) {
+    vector<vector<int>> data = {
+            {1,2,7,10},
+            {3,5,9,13},
+            {4,8,12,14},
+            {6,11,15,16}
+    };
+
+    pair<int, int> pos(-1, -1);
+    size_t rows = 4;
+    size_t cols = 4;
+
+    int row = 0;
+    int col = cols - 1;
+    while (row < rows && col >= 0) {
+        if (data[row][col] == target) {
+            pos.first = row;
+            pos.second = col;
+            return pos;
+        } else if (data[row][col] > target) {
+            --col;
+        } else {
+            ++row;
         }
-        int row = 0;
-        int col = cols - 1;
-        while (row < rows && col >= 0) {
-            if (array[row][col] == target) {
-                return true;
-            } else if (array[row][col] > target) {
-                --col;
-            } else {
-                ++row;
-            }
-        }
+    }
+    return pos;
+}
+
+bool findIn2DArray2(const vector<vector<int>>& array, const int target) {
+    size_t rows = array.size();
+    size_t cols = array[0].size();
+    if (array.empty() || rows == 0 || cols == 0) {
         return false;
     }
-};
+    int row = 0;
+    int col = cols - 1;
+    while (row < rows && col >= 0) {
+        if (array[row][col] == target) {
+            return true;
+        } else if (array[row][col] > target) {
+            --col;
+        } else {
+            ++row;
+        }
+    }
+    return false;
+}
 
 // 旋转数组，最小数字
 class Solution2 {
@@ -426,7 +451,7 @@ void testFindMinRotatedArrayTarget() {
 }
 
 // 在旋转数组中查找目标数字target的下标，数字不重复
-int findTargetPos1(vector<int> &nums, int target) {
+int findTargetPos1(const vector<int>& nums, int target) {
     if (nums.empty()) {
         return -1;
     }
@@ -452,6 +477,82 @@ int findTargetPos1(vector<int> &nums, int target) {
         }
     }
     return -1;
+}
+
+// 买卖股票最大收益
+int maxProfit1(const vector<int>& prices) {
+    if (prices.size() < 2) {
+        return INT32_MIN;
+    }
+    int maxProfit = INT32_MIN;
+    int min = INT32_MAX;
+    for (int i = 0; i < prices.size(); i++){
+        min = std::min(min, prices[i]);
+        maxProfit = std::max(maxProfit, prices[i] - min);
+    }
+    return maxProfit;
+}
+
+void HeapAdjust(int nums[], size_t s, size_t m) {
+    if (s < 0 || s > m) {
+        return;
+    }
+
+    int record = nums[s];
+    for (size_t j = 2 * s + 1; j <= m; j = 2 * s + 1) {
+        if ((nums[j] < nums[j + 1]) && (j < m)) {
+            ++j;
+        }
+        if (record >= nums[j]) {
+            break;
+        }
+        nums[s] = nums[j];
+        s = j;
+    }
+    nums[s] = record;
+}
+
+// 取最小的K个数字
+vector<int> GetLeastNumbers(const vector<int>& input, size_t k) {
+    vector<int> ret;
+    if ((k < 1) || (input.size() < k)) {
+        return ret;
+    }
+    ret.resize(k);
+    std::copy(input.begin(), input.begin() + k, ret.begin());
+    for (size_t i  = 0; i < k; ++ i) {
+        ret[i] = input[i];
+    }
+    for (int i = k / 2; i >= 0; --i) {
+        HeapAdjust(ret.data(), i, k - 1);
+    }
+    for (size_t i = k; i < input.size(); ++i) {
+        if (input[i] >= ret[0]) {
+            continue;
+        }
+        ret[0] = input[i];
+        HeapAdjust(ret.data(), 0, k - 1);
+    }
+    for (int i = k - 1; i > 0; --i) {
+        std::swap(ret[0], ret[i]);
+        HeapAdjust(ret.data(), 0, i - 1);
+    }
+    return ret;
+}
+
+// 青蛙一次跳1级和跳2级
+int jumpFloor(size_t number ) {
+    if (number < 1) {
+        return 0;
+    }
+    int a[2];
+    a[0] = 1;
+    a[1] = 2;
+    for(size_t i = 3; i <= number; i++) {
+        size_t pos = (i - 1) % 2;
+        a[pos] = a[0] + a[1];
+    }
+    return a[(number - 1) % 2];
 }
 
 // 在旋转数组中查找目标数字target的下标，数字可能重复
@@ -737,14 +838,117 @@ int g() {
     }
 }
 
+/*
+打印螺旋矩阵
+给定一个正整数 n，生成一个包含 1 到 n^2 所有元素，且元素按顺时针顺序螺旋排列的正方形矩阵。
+示例:
+输入: 3
+输出:
+
+[
+ [ 1, 2, 3 ],
+ [ 8, 9, 4 ],
+ [ 7, 6, 5 ]
+]
+*/
+void spiralMatrix(const int n) {
+    if (n < 1) {
+        return;
+    }
+
+    vector<vector<int>> data(n, vector<int>(n));
+    int iTop = 0;
+    int iBottom = n - 1;
+    int jLeft = 0;
+    int jRight = n - 1;
+    int size = 1;
+
+    while ((iTop <= iBottom) && (jLeft <= jRight)) {
+        for (int j = jLeft; j <= jRight; ++j) {
+            data[iTop][j] = size++;
+        }
+        iTop++;
+        if (iTop > iBottom) {
+            break;
+        }
+
+        for (int i = iTop; i <= iBottom; ++i) {
+            data[i][jRight] = size++;
+        }
+        jRight--;
+        if (jRight < jLeft) {
+            break;
+        }
+
+        for (int j = jRight; j >= jLeft; --j) {
+            data[iBottom][j] = size++;
+        }
+        iBottom--;
+        if (iBottom < iTop) {
+            break;
+        }
+
+        for (int i = iBottom; i >= iTop; --i) {
+            data[i][jLeft] = size++;
+        }
+        jLeft++;
+        if (jLeft > jRight) {
+            break;
+        }
+    }
+
+    std::cout << "[" << std::endl;
+    for (int i = 0; i < n; ++i) {
+        cout << " [ ";
+        for (int j = 0; j < n; ++j) {
+            if (j != n - 1) {
+                cout << data[i][j] << ", ";
+            } else if ((j == n - 1) && (i != n - 1)) {
+                cout << data[i][j] << " ],\n";
+            } else {
+                cout << data[i][j] << " ]\n";
+            }
+        }
+    }
+    std::cout << "]" << std::endl;
+}
+
+// 相邻相等若干对数字，中间插入一个不相等，找到这个数字
+int singleNonDuplicate() {
+    vector<int> nums = {3,3,1,1,2,5,5};
+    int low = 0;
+    int high = nums.size() - 1;
+    while (low <= high) {
+        int mid = low + (high - low) / 2;
+        bool halvesAreEven = (high - mid) % 2 == 0;
+        if (nums[mid + 1] == nums[mid]) {
+            if (halvesAreEven) {
+                low = mid + 2;
+            } else {
+                high = mid - 1;
+            }
+        } else if (nums[mid - 1] == nums[mid]) {
+            if (halvesAreEven) {
+                high = mid - 2;
+            } else {
+                low = mid + 1;
+            }
+        } else {
+            return nums[mid];
+        }
+    }
+    return nums[low];
+}
 
 int main(int argc, char* argv[]) {
     //testReorderArray();
     //testFindOneNumber();
     //testRotatedArray();
     //testFindTargetPos();
-    testFindMinRotatedArrayTarget();
-
+    //testFindMinRotatedArrayTarget();
+    //spiralMatrix(4);
+    int singleNum = singleNonDuplicate();
+    cout << singleNum << endl;
 }
 
 

@@ -105,9 +105,25 @@ int getSumOf2DArray() {
     return (int) allSum;
 }
 
-
-
-
+int maxLength(const vector<int>& arr) {
+    // write code here
+    if (arr.empty()) return 0;
+    vector<int> v(100000);
+    int res=0;
+    int i=0;
+    int j=0;
+    while (j<arr.size()) {
+        if (v[arr[j]] == 0) {
+            v[arr[j]] = 1;
+            res = max(res,j-i+1);
+            j++;
+        } else {
+            v[arr[i]] = 0;
+            i++;
+        }
+    }
+    return res;
+}
 
 /*
  * 动态规划：LCS最长公共子序列

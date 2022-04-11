@@ -3,11 +3,7 @@
 #include <cstring>
 #include <iostream>
 #include <string>
-#include <vector>
-#include <set>
-#include <map>
-#include <stack>
-#include <queue>
+
 
 using namespace std;
 
@@ -74,6 +70,13 @@ void count_0_1() {
     }
     cout << "count1: " << count1 << endl;
 }
+
+// 随机问题
+// 不等概率变等概率
+// https://blog.csdn.net/doc_sgl/article/details/10791121
+
+
+
 
 void DeleteSpace(char* str);
 

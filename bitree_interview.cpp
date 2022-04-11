@@ -777,6 +777,7 @@ TreeNode* lowestCommonAncestor2(TreeNode* root, TreeNode* p, TreeNode* q) {
     return left ? left : right;
 }
 
+// https://blog.csdn.net/weixin_40740059/article/details/88917707
 void findNodePath(TreeNode* t, TreeNode* q, vector<TreeNode*> &path) {
     vector<bool> tag;
     TreeNode* p = t;
@@ -808,6 +809,54 @@ inline ostream &operator<<(ostream &out, vector<TreeNode*> &data) {
     //out << endl;
     return out;
 }
+
+class SolutionTraverse {
+public:
+    /**
+     *
+     * @param root TreeNode类 the root of binary tree
+     * @return int整型vector<vector<>>
+     */
+    vector<int>pre;
+    vector<int>mid;
+    vector<int>post;
+
+    vector<vector<int> > threeOrders(TreeNode* root) {
+        // write code here
+        if (root != nullptr) {
+            preorder(root);
+            midorder(root);
+            postorder(root);
+        }
+        vector<vector<int>> res = {pre, mid, post};
+        return res;
+
+    }
+
+    void preorder(TreeNode* root) {
+        if (!root)
+            return;
+        pre.push_back(root->val);
+        preorder(root->left);
+        preorder(root->right);
+    }
+
+    void midorder(TreeNode* root) {
+        if (!root)
+            return;
+        midorder(root->left);
+        mid.push_back(root->val);
+        midorder(root->right);
+    }
+
+    void postorder(TreeNode* root) {
+        if (!root)
+            return;
+        postorder(root->left);
+        postorder(root->right);
+        post.push_back(root->val);
+    }
+};
 
 void findShortLongPath(TreeNode* t, vector<TreeNode*> &shortPath, vector<TreeNode*> &longPath) {
     vector<TreeNode*> path;
